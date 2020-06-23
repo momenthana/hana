@@ -90,8 +90,7 @@ const index = async (text, channel, type) => {
       type === 'discord' ? info.content += '\n다른건 <@457459470424080384> 또는 momenthana@kakao.com으로 질문해줘!' : '\n다른건 momenthana@kakao.com으로 질문해줘!'
     }
 
-    const match = text.match(/(조식|중식|석식|급식)/)
-    if (match) {
+    if (text.match(/(아침|조식|점심|중식|저녁|석식|급식)/)) {
       const data = load(type)[channel]
       if (!data) {
         info.content = messages.unregistered
@@ -99,7 +98,7 @@ const index = async (text, channel, type) => {
         const date = dateConvert(text)
         school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
         info.title = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`
-        info.content += await meal(date, match[0])
+        info.content += await meal(date, text.match(/(아침|조식)/) ? '조식' : text.match(/(점심|중식)/) ? '중식' : text.match(/(저녁|석식)/) ? '석식' : '급식')
       }
     }
 
