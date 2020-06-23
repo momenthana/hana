@@ -37,10 +37,9 @@ const meal = async (date, type) => {
 }
 
 const index = async (text, channel, type) => {
-  let info
+  let info = { title: '', content: '' }
   if (text.includes('하나')) {
     if (text.match(/검색/)) {
-      info = ''
       const result = []
       if (text.match(/.*(초|중|고|학교|유치원)/)) {
         for (const key in School.Region) {
@@ -64,54 +63,54 @@ const index = async (text, channel, type) => {
           })
         }
         for (const key in result) {
-          info += `\n${Number(key) + 1}. ${result[key].name} (${result[key].address !== ' ' ? result[key].address : result[key].schoolRegion ? result[key].schoolRegion + '교육청 소재' : '소재지 정보 없음'})`
+          info.content += `\n${Number(key) + 1}. ${result[key].name} (${result[key].address !== ' ' ? result[key].address : result[key].schoolRegion ? result[key].schoolRegion + '교육청 소재' : '소재지 정보 없음'})`
           search[channel] = result
         }
-        info += '\n\'하나야 1번 등록해줘\'처럼 말해주면 채널에 등록해줄게'
+        info.content += '\n\'하나야 1번 등록해줘\'처럼 말해주면 채널에 등록해줄게'
       } else {
-        info = '학교나 유치원 이름을 정확하게 입력해줘!'
+        info.content = '학교나 유치원 이름을 정확하게 입력해줘!'
       }
     }
 
     if (text.match(/등록/)) {
       const searchData = search[channel]
       if (!searchData) {
-        info = messages.unregistered
+        info.content = messages.unregistered
       } else {
         const data = load(type)
         const i = searchData[Number(text.replace(/[^{0-9}]/gi, '')) - 1]
-        info = `${i.name}${i.type === 'KINDERGARTEN' ? '을' : '를'} 채널에 등록했어!`
+        info.content = `${i.name}${i.type === 'KINDERGARTEN' ? '을' : '를'} 채널에 등록했어!`
         data[channel] = { type: i.type, region: i.region, schoolCode: i.schoolCode }
         save(type, data)
       }
     }
 
     if (text.match(/(하나!|도움|도와)/)) {
-      info = messages.help
-      type === 'discord' ? info += '\n다른건 <@457459470424080384> 또는 momenthana@kakao.com으로 질문해줘!' : '\n다른건 momenthana@kakao.com으로 질문해줘!'
+      info.content = messages.help
+      type === 'discord' ? info.content += '\n다른건 <@457459470424080384> 또는 momenthana@kakao.com으로 질문해줘!' : '\n다른건 momenthana@kakao.com으로 질문해줘!'
     }
 
     const match = text.match(/(조식|중식|석식|급식)/)
     if (match) {
       const data = load(type)[channel]
       if (!data) {
-        info = messages.unregistered
+        info.content = messages.unregistered
       } else {
         const date = dateConvert(text)
         school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
-        info = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`
-        info += await meal(date, match[0])
+        info.title = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`
+        info.content += await meal(date, match[0])
       }
     }
 
     if (text.includes('일정')) {
       const data = load(type)[channel]
       if (!data) {
-        info = messages.unregistered
+        info.content = messages.unregistered
       } else {
         school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
         const calendar = await school.getCalendar({ default: null })
-        info = `[${calendar.year}년 ${calendar.month}월]\n`
+        info.title = `[${calendar.year}년 ${calendar.month}월]\n`
 
         calendar.year = undefined
         calendar.month = undefined
@@ -120,7 +119,7 @@ const index = async (text, channel, type) => {
 
         for (const day in calendar) {
           if (calendar[day]) {
-            info += `[${day}일] ${calendar[day]}\n`
+            info.content += `[${day}일] ${calendar[day]}\n`
           }
         }
       }

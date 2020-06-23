@@ -23,14 +23,14 @@ if (process.env.discordToken) {
 
   discord.on('message', async msg => {
     try {
-      const info = await school(msg.content, msg.channel.id, 'discord', { type: '' })
-      if (info) {
+      let info = await school(msg.content, msg.channel.id, 'discord', { type: '' })
+      if (info.content) {
         const embed = new Discord.RichEmbed()
           .setColor('#f7cac9')
-          .setTitle('하나')
-          .setDescription(info)
+          .setTitle(info.title)
+          .setDescription(info.content)
         await msg.channel.send({ embed })
-        console.log(`Discord ${msg.channel.id}\n${msg.content}\n`.green, info)
+        console.log(`Discord ${msg.channel.id}\n${msg.content}\n`.green, info.title, info.content)
       }
     } catch (error) {
       console.warn(`Discord ${msg.channel.id}\n${msg.content}\n`.red, error)
@@ -58,9 +58,9 @@ if (process.env.slackToken) {
     try {
       const info = await school(event.text, event.channel, 'slack')
 
-      if (info) {
-        await slack.sendMessage(info, event.channel)
-        console.log(`Slack ${event.channel}\n${event.text}\n`.green, info)
+      if (info.content) {
+        await slack.sendMessage(info.title + info.content, event.channel)
+        console.log(`Slack ${event.channel}\n${event.text}\n`.green, info.title, info.content)
       }
     } catch (error) {
       console.warn(`Slack ${event.channel}\n${event.text}\n`.red, error)
