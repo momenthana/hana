@@ -15,18 +15,14 @@ const index = (text) => {
     }
   }
 
-  if (text.includes('일') && text.replace(/[^{0-9}]/gi, '')) {
-    setDate(Number(text.replace(/[^{0-9}]/gi, '')))
-  }
-
   for (const i in define.week) {
     if (text.match(RegExp(define.week[i] + '요일'))) {
       date.setDate(date.getDate() + (Number(i) - date.getDay()))
     }
   }
 
-  if (text.match(/(월|달)/) && text.replace(/[^{0-9}]/gi, '')) {
-    setDate(Number(text.replace(/[^{0-9}]/gi, '')), 'M')
+  if (text.match(/(일|월|달)/) && text.replace(/[^{0-9}]/gi, '')) {
+    setDate(Number(text.replace(/[^{0-9}]/gi, '')), text.match(/(월|달)/) ? 'M' : '')
   }
 
   if (text.includes('주')) {
