@@ -8,17 +8,9 @@ const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 
 if (process.env.discordToken) {
   const discord = new Discord.Client()
-  const length = messages.activity.length
 
   discord.on('ready', () => {
     console.log(`Logged in as ${discord.user.tag}!`.green)
-    setInterval(() => {
-      messages.activity[length] = '서버 ' + discord.guilds.size + '개에서 사용'
-      discord.user.setActivity(messages.activity[Math.floor(Math.random() * messages.activity.length)], {
-        type: process.env.twitch ? 'STREAMING' : null,
-        url: 'https://www.twitch.tv/' + process.env.twitch
-      })
-    }, 10000)
   })
 
   discord.on('message', async msg => {
@@ -36,6 +28,16 @@ if (process.env.discordToken) {
       console.warn(`Discord ${msg.channel.id}\n${msg.content}\n`.red, error)
     }
   })
+
+  const length = messages.activity.length
+
+  setInterval(() => {
+    messages.activity[length] = '서버 ' + discord.guilds.size + '개에서 사용'
+    discord.user.setActivity(messages.activity[Math.floor(Math.random() * messages.activity.length)], {
+      type: process.env.twitch ? 'STREAMING' : null,
+      url: 'https://www.twitch.tv/' + process.env.twitch
+    })
+  }, 10000)
 
   discord.login(process.env.discordToken)
 }
