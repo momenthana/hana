@@ -1,6 +1,6 @@
 {
   "name": "hana",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "serve": "node -r dotenv/config src/index",
     "dev": "nodemon --ignore '*.json' -r dotenv/config src/index.js dotenv_config_path=.env.dev",
