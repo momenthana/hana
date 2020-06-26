@@ -16,6 +16,10 @@ if (process.env.discordToken) {
   discord.on('message', async msg => {
     try {
       let info = await school(msg.content, msg.channel.id, 'discord', { type: '' })
+      if (msg.content.match(/하나.*(핑|ping)|(핑|ping).*하나/)) {
+        let ping = await msg.channel.send('핑!')
+        ping.edit('퐁! ' + Math.round((ping.createdTimestamp - msg.createdTimestamp) - discord.ping) + 'ms') 
+      }
       if (info.content) {
         const embed = new Discord.RichEmbed()
           .setColor('#f7cac9')
