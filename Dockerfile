@@ -1,10 +1,10 @@
-FROM node:12
+FROM node:12-alpine
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json ./
 
-RUN npm install --production
+RUN npm i --production
 
 COPY . .
 
