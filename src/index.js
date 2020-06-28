@@ -15,7 +15,10 @@ if (process.env.discordToken) {
 
   discord.on('message', async msg => {
     try {
-      const embed = new Discord.RichEmbed().setColor('#f7cac9')
+      const embed = new Discord.RichEmbed()
+        .setColor('#f7cac9')
+        .setTimestamp()
+        .setFooter(msg.author.username, msg.author.avatarURL);
 
       if (msg.content.match(/하나.*(핑|ping)|(핑|ping).*하나/)) {
         embed.setTitle(msg.content.includes('핑') ? '퐁!' : 'Pong!')
