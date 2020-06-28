@@ -33,8 +33,14 @@ const meal = async (date, type, info) => {
     const length = meal.indexOf(`[${type}]`)
     meal = meal.substring(length, meal.indexOf('[', length + 1) !== -1 ? meal.indexOf('[', length + 1) : meal.length)
     fields.push({ name: type, value: meal.replace(/\[\S*?\]/g, '') })
-  } else {
+  } else if (meal.includes(`${type}이 없습니다`)) {
     info.content = meal
+  } else if (type == '급식') {
+    ['조식', '중식', '석식'].forEach(e => {
+      const length = meal.indexOf(`[${e}]`)
+      let content = meal.substring(length, meal.indexOf('[', length + 1) !== -1 ? meal.indexOf('[', length + 1) : meal.length)
+      fields.push({ name: e, value: content.replace(/\[\S*?\]/g, ''), inline: true })
+    })
   }
 
   return fields
