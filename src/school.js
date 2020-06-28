@@ -37,7 +37,7 @@ const meal = async (date, type) => {
 }
 
 const index = async (text, channel, type) => {
-  let info = { title: '', content: '' }
+  let info = { title: '', content: '', fields: [] }
   if (text.includes('하나')) {
     if (text.match(/검색/)) {
       const result = []
@@ -109,7 +109,7 @@ const index = async (text, channel, type) => {
       } else {
         school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
         const calendar = await school.getCalendar({ default: null })
-        info.title = `[${calendar.year}년 ${calendar.month}월]\n`
+        info.title = `${calendar.year}년 ${calendar.month}월\n`
 
         calendar.year = undefined
         calendar.month = undefined
@@ -118,7 +118,7 @@ const index = async (text, channel, type) => {
 
         for (const day in calendar) {
           if (calendar[day]) {
-            info.content += `[${day}일] ${calendar[day]}\n`
+            info.fields.push({ name: day + '일', value: calendar[day].replace(/,/g, '\n') })
           }
         }
       }
