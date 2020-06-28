@@ -24,16 +24,20 @@ const save = (type, info) => {
   }
 }
 
-const meal = async (date, type) => {
+const meal = async (date, type, info) => {
   let meal = await school.getMeal({ year: date.getFullYear(), month: date.getMonth() + 1, default: `${type}이 없습니다\n` })
-  meal = meal[date.getDate()].replace(/[0-9*.]|amp;/gi, '')
+  meal = meal[date.getDate()].replace(/[0-9*.]|amp;|\//gi, '')
+  let fields = []
 
   if (meal.includes(`[${type}]`)) {
     const length = meal.indexOf(`[${type}]`)
     meal = meal.substring(length, meal.indexOf('[', length + 1) !== -1 ? meal.indexOf('[', length + 1) : meal.length)
+    fields.push({ name: type, value: meal.replace(/\[\S*?\]/g, '') })
+  } else {
+    info.content = meal
   }
 
-  return meal
+  return fields
 }
 
 const index = async (text, channel, type) => {
@@ -98,7 +102,7 @@ const index = async (text, channel, type) => {
         const date = dateConvert(text)
         school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
         info.title = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`
-        info.content += await meal(date, text.match(/(아침|조식)/) ? '조식' : text.match(/(점심|중식)/) ? '중식' : text.match(/(저녁|석식)/) ? '석식' : '급식')
+        info.fields = await meal(date, text.match(/(아침|조식)/) ? '조식' : text.match(/(점심|중식)/) ? '중식' : text.match(/(저녁|석식)/) ? '석식' : '급식', info)
       }
     }
 

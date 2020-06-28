@@ -78,7 +78,7 @@ if (process.env.slackToken) {
       const info = await school(event.text, event.channel, 'slack')
 
       info.fields.forEach(e => {
-        info.content += `[${e.name}] ${e.value}\n`
+        info.content += `${e.name}\n ${e.value}\n`
       })
       
       if (info.content) {
