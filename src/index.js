@@ -38,6 +38,9 @@ if (process.env.discordToken) {
           embed.setTitle(info.title).setDescription(info.content)
             .fields = info.fields
           await msg.channel.send({ embed })
+          info.fields.forEach(e => {
+            info.content += `${e.name} ${e.value}\n`
+          })
           console.log(`Discord ${msg.channel.id}\n${msg.content}\n`.green, info.title, info.content)
         }
       }
