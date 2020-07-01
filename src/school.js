@@ -25,7 +25,7 @@ const save = (type, info) => {
 }
 
 const meal = async (date, type, info) => {
-  let meal = await school.getMeal({ year: date.getFullYear(), month: date.getMonth() + 1, default: `${type}이 없습니다\n` })
+  let meal = await school.getMeal({ year: date.getFullYear(), month: date.getMonth() + 1 })
   meal = meal[date.getDate()].replace(/[0-9*.]|amp;|\//gi, '')
   let fields = []
 
@@ -33,14 +33,18 @@ const meal = async (date, type, info) => {
     const length = meal.indexOf(`[${type}]`)
     meal = meal.substring(length, meal.indexOf('[', length + 1) !== -1 ? meal.indexOf('[', length + 1) : meal.length)
     fields.push({ name: type, value: meal.replace(/\[\S*?\]/g, '') })
-  } else if (meal.includes(`${type}이 없습니다`)) {
-    info.content = meal
-  } else if (type == '급식') {
+  } else if (type === '급식') {
     ['조식', '중식', '석식'].forEach(e => {
       const length = meal.indexOf(`[${e}]`)
       let content = meal.substring(length, meal.indexOf('[', length + 1) !== -1 ? meal.indexOf('[', length + 1) : meal.length)
-      fields.push({ name: e, value: content.replace(/\[\S*?\]/g, ''), inline: true })
+      if (content) {
+        fields.push({ name: e, value: content.replace(/\[\S*?\]/g, ''), inline: true })
+      }
     })
+  }
+
+  if (!fields.length) {
+    info.content = type + '이 없습니다'
   }
 
   return fields
