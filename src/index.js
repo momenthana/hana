@@ -15,6 +15,8 @@ if (process.env.discordToken) {
 
   discord.on('message', async msg => {
     try {
+      if (msg.author.bot) return
+
       const embed = new Discord.RichEmbed()
         .setColor('#f7cac9')
         .setTimestamp()
