@@ -1,16 +1,16 @@
 const { RTMClient } = require('@slack/rtm-api')
 const Discord = require('discord.js')
 const colors = require('colors')
-const fs = require('fs')
+import fs from 'fs'
 
-const school = require('./school')
+import school from './school'
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 
 if (process.env.discordToken) {
   const discord = new Discord.Client()
 
   discord.on('ready', () => {
-    console.log(`Logged in as ${discord.user.tag}!`.green)
+    console.log(colors.green(`Logged in as ${discord.user.tag}!`))
   })
 
   discord.on('message', async msg => {
@@ -35,7 +35,7 @@ if (process.env.discordToken) {
         ]
         ping.edit({ embed })
       } else {
-        let info = await school(msg.content, msg.channel.id, 'discord', { type: '' })
+        let info = await school(msg.content, msg.channel.id, 'discord')
         if (info.content || info.fields.length) {
           embed.setTitle(info.title).setDescription(info.content)
             .fields = info.fields
@@ -43,11 +43,11 @@ if (process.env.discordToken) {
           info.fields.forEach(e => {
             info.content += `${e.name} ${e.value}\n`
           })
-          console.log(`Discord ${msg.channel.id}\n${msg.content}\n`.green, info.title, info.content)
+          console.log(colors.green(`Discord ${msg.channel.id}\n${msg.content}\n`), info.title, info.content)
         }
       }
     } catch (error) {
-      console.warn(`Discord ${msg.channel.id}\n${msg.content}\n`.red, error)
+      console.warn(colors.red(`Discord ${msg.channel.id}\n${msg.content}\n`), error)
     }
   })
 
@@ -72,9 +72,9 @@ if (process.env.slackToken) {
       const random = Math.floor(Math.random() * messages.joined.length)
       const info = messages.joined[random].replace('${event.user}', event.user)
       slack.sendMessage(info, event.channel)
-      console.log(`Slack ${event.channel}\n`.green, info)
+      console.log(colors.green(`Slack ${event.channel}\n`), info)
     } catch (error) {
-      console.warn(`Slack ${event.channel}\n`.red, error)
+      console.warn(colors.red(`Slack ${event.channel}\n`), error)
     }
   })
 
@@ -88,15 +88,15 @@ if (process.env.slackToken) {
       
       if (info.content) {
         await slack.sendMessage(info.title + info.content, event.channel)
-        console.log(`Slack ${event.channel}\n${event.text}\n`.green, info.title, info.content)
+        console.log(colors.green(`Slack ${event.channel}\n${event.text}\n`), info.title, info.content)
       }
     } catch (error) {
-      console.warn(`Slack ${event.channel}\n${event.text}\n`.red, error)
+      console.warn(colors.red(`Slack ${event.channel}\n${event.text}\n`), error)
     }
   });
 
   (async () => {
     await slack.start()
-    console.log('Slackbot is running!'.green)
+    console.log(colors.green('Slackbot is running!'))
   })()
 }

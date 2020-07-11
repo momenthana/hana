@@ -1,8 +1,8 @@
-const School = require('school-kr')
-const school = new School()
-const fs = require('fs')
+import schoolKr from 'school-kr'
+const school = new schoolKr()
+import fs from 'fs'
 
-const dateConvert = require('./dateConvert.js')
+import dateConvert from './dateConvert'
 const define = JSON.parse(fs.readFileSync('src/define.json').toString())
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 const search = {}
@@ -26,19 +26,19 @@ const save = (type, info) => {
 
 const meal = async (date, type, info) => {
   let meal = await school.getMeal({ year: date.getFullYear(), month: date.getMonth() + 1 })
-  meal = meal[date.getDate()].replace(/[0-9*.]|amp;|\//gi, '')
+  let rebase = meal[date.getDate()].replace(/[0-9*.]|amp;|\//gi, '')
   let fields = []
 
-  if (meal.includes(`[${type}]`)) {
-    const length = meal.indexOf(`[${type}]`)
-    meal = meal.substring(length, meal.indexOf('[', length + 1) !== -1 ? meal.indexOf('[', length + 1) : meal.length)
-    fields.push({ name: type, value: meal.replace(/\[\S*?\]/g, '') })
+  if (rebase.includes(`[${type}]`)) {
+    const length = rebase.indexOf(`[${type}]`)
+    rebase = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
+    fields.push({ name: type, value: rebase.replace(/\[\S*?\]/g, '') })
   } else if (type === '급식') {
     ['조식', '중식', '석식'].forEach(e => {
-      const length = meal.indexOf(`[${e}]`)
-      let content = meal.substring(length, meal.indexOf('[', length + 1) !== -1 ? meal.indexOf('[', length + 1) : meal.length)
-      if (content) {
-        fields.push({ name: e, value: content.replace(/\[\S*?\]/g, ''), inline: true })
+      const length = rebase.indexOf(`[${e}]`)
+      rebase = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
+      if (rebase) {
+        fields.push({ name: e, value: rebase.replace(/\[\S*?\]/g, ''), inline: true })
       }
     })
   }
@@ -56,9 +56,9 @@ const index = async (text, channel, type) => {
     if (text.match(/검색/)) {
       const result = []
       if (text.match(/.*(초|중|고|학교|유치원)/)) {
-        for (const key in School.Region) {
+        for (const key in schoolKr.Region) {
           const splitText = text.match(/.*(초|중|고|학교|유치원)/)[0].split(' ')
-          const search = await school.search(School.Region[key], splitText[splitText.length - 1])
+          const search = await school.search(schoolKr.Region[key], splitText[splitText.length - 1])
           search.forEach(e => {
             let addr
             for (const name in define.region) {
@@ -110,7 +110,7 @@ const index = async (text, channel, type) => {
         info.content = messages.unregistered
       } else {
         const date = dateConvert(text)
-        school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
+        school.init(schoolKr.Type[data.type], schoolKr.Region[data.region], data.schoolCode)
         info.title = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`
         info.fields = await meal(date, text.match(/(아침|조식)/) ? '조식' : text.match(/(점심|중식)/) ? '중식' : text.match(/(저녁|석식)/) ? '석식' : '급식', info)
       }
@@ -121,7 +121,7 @@ const index = async (text, channel, type) => {
       if (!data) {
         info.content = messages.unregistered
       } else {
-        school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
+        school.init(schoolKr.Type[data.type], schoolKr.Region[data.region], data.schoolCode)
         const calendar = await school.getCalendar({ default: null })
         info.title = `${calendar.year}년 ${calendar.month}월\n`
 
@@ -142,4 +142,4 @@ const index = async (text, channel, type) => {
   return info
 }
 
-module.exports = index
+export default index

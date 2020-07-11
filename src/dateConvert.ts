@@ -1,4 +1,4 @@
-const fs = require('fs')
+import fs from 'fs'
 
 const define = JSON.parse(fs.readFileSync('src/define.json').toString())
 
@@ -26,14 +26,14 @@ const index = (text) => {
   }
 
   if (text.includes('주')) {
-    setDate(text.match(/(다|저|지)/g).length * 7)
+    setDate(text.match(/(다|저|지)/g).length * 7, 'D')
   } else if (text.includes('해')) {
     setDate(text.match(/(다|저|지)/g).length, 'Y')
   }
 
   for (const i in define.dateExp) {
     if (text.match(RegExp(define.dateExp[i]))) {
-      date.setDate(date.getDate() - 3 + Number(i))
+      setDate(date.getDate() - 3 + Number(i), 'D')
     }
   }
 
@@ -41,28 +41,28 @@ const index = (text) => {
     setDate(Number(text.replace(/[^{0-9}]/gi, '')), 'Y')
     for (const i in define.dateYearExp) {
       if (text.match(RegExp(define.dateYearExp[i]))) {
-        date.setDate(date.getFullYear() - 3 + Number(i), 'Y')
+        setDate(date.getFullYear() - 3 + Number(i), 'Y')
       }
     }
   }
   
   if (text.includes('열흘')) {
-    setDate(10)
+    setDate(10, 'D')
   } else if (text.includes('스무날')) {
-    setDate(20)
+    setDate(20, 'D')
   } else if (text.includes('보름')) {
-    setDate(15)
+    setDate(15, 'D')
   } else if (text.includes('그믐')) {
-    setDate(30)
+    setDate(30, 'D')
   } else {
     for (const key in define.dateCentury) {
       if (text.includes(define.dateCentury[key]) || text.includes(define.dateCenturyAbbr[key])) {
         if (text.includes('열')) {
-          setDate(Number(key) + 11)
+          setDate(Number(key) + 11, 'D')
         } else if (text.includes('스무')) {
-          setDate(Number(key) + 21)
+          setDate(Number(key) + 21, 'D')
         } else {
-          setDate(Number(key) + 1)
+          setDate(Number(key) + 1, 'D')
         }
 
         return date
@@ -73,4 +73,4 @@ const index = (text) => {
   return date
 }
 
-module.exports = index
+export default index
