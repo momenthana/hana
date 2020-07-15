@@ -3,7 +3,7 @@
   "version": "1.0.4",
   "scripts": {
     "start": "ts-node -r dotenv/config src/index",
-    "dev": "ts-node-dev --ignore '*.json' -r dotenv/config src/index.js dotenv_config_path=.env.dev",
+    "dev": "ts-node-dev -r dotenv/config src/index dotenv_config_path=.env.dev",
     "lint": "eslint src/*.js --fix",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"

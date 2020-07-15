@@ -9,7 +9,7 @@ const search = {}
 
 const load = (type) => {
   try {
-    return JSON.parse(fs.readFileSync(`src/data/${type}.json`).toString())
+    return JSON.parse(fs.readFileSync(`data/${type}.json`).toString())
   } catch {
     return {}
   }
@@ -17,10 +17,10 @@ const load = (type) => {
 
 const save = (type, info) => {
   try {
-    fs.writeFileSync(`src/data/${type}.json`, JSON.stringify(info))
+    fs.writeFileSync(`data/${type}.json`, JSON.stringify(info))
   } catch {
-    fs.mkdirSync('src/data')
-    fs.writeFileSync(`src/data/${type}.json`, JSON.stringify(info))
+    fs.mkdirSync('data')
+    fs.writeFileSync(`data/${type}.json`, JSON.stringify(info))
   }
 }
 
