@@ -31,14 +31,14 @@ const meal = async (date, type, info) => {
 
   if (rebase.includes(`[${type}]`)) {
     const length = rebase.indexOf(`[${type}]`)
-    rebase = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
-    fields.push({ name: type, value: rebase.replace(/\[\S*?\]/g, '') })
+    const sub = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
+    fields.push({ name: type, value: sub.replace(/\[\S*?\]/g, '') })
   } else if (type === '급식') {
     ['조식', '중식', '석식'].forEach(e => {
       const length = rebase.indexOf(`[${e}]`)
-      rebase = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
+      const sub = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
       if (rebase) {
-        fields.push({ name: e, value: rebase.replace(/\[\S*?\]/g, ''), inline: true })
+        fields.push({ name: e, value: sub.replace(/\[\S*?\]/g, ''), inline: true })
       }
     })
   }
