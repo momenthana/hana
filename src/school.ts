@@ -37,7 +37,7 @@ const meal = async (date, type, info) => {
     ['조식', '중식', '석식'].forEach(e => {
       const length = rebase.indexOf(`[${e}]`)
       const sub = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
-      if (rebase) {
+      if (sub) {
         fields.push({ name: e, value: sub.replace(/\[\S*?\]/g, ''), inline: true })
       }
     })
