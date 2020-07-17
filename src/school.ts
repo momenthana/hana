@@ -7,7 +7,7 @@ const define = JSON.parse(fs.readFileSync('src/define.json').toString())
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 const search = {}
 
-const load = (type) => {
+const load = (type: string) => {
   try {
     return JSON.parse(fs.readFileSync(`data/${type}.json`).toString())
   } catch {
@@ -15,7 +15,7 @@ const load = (type) => {
   }
 }
 
-const save = (type, info) => {
+const save = (type: string, info: object) => {
   try {
     fs.writeFileSync(`data/${type}.json`, JSON.stringify(info))
   } catch {
@@ -24,7 +24,7 @@ const save = (type, info) => {
   }
 }
 
-const meal = async (date, type, info) => {
+const meal = async (date: Date, type: string, info) => {
   let meal = await school.getMeal({ year: date.getFullYear(), month: date.getMonth() + 1 })
   let rebase = meal[date.getDate()].replace(/[0-9*.]|amp;|\//gi, '')
   let fields = []
@@ -50,30 +50,24 @@ const meal = async (date, type, info) => {
   return fields
 }
 
-const index = async (text, channel, type) => {
+const index = async (text: string, channel: string, type: string) => {
   let info = { title: '', content: '', fields: [] }
   if (text.includes('하나')) {
     if (text.match(/검색/)) {
-      const result = []
+      let result: Array<any> = []
       if (text.match(/.*(초|중|고|학교|유치원)/)) {
-        for (const key in schoolKr.Region) {
+        for (const region in schoolKr.Region) {
           const splitText = text.match(/.*(초|중|고|학교|유치원)/)[0].split(' ')
-          const search = await school.search(schoolKr.Region[key], splitText[splitText.length - 1])
+          const search = await school.search(schoolKr.Region[region], splitText[splitText.length - 1])
           search.forEach(e => {
-            let addr
-            for (const name in define.region) {
-              if (key === name) {
-                addr = define.region[name]
-              }
+            let addr: any, type: any = 'HIGH'
+            for (const [key, value] of Object.entries(define.region)) {
+              if (region === key) addr = value
             }
-            let type = 'HIGH'
-            const schoolExp = { 중학교: 'MIDDLE', 초등학교: 'ELEMENTARY', 유치원: 'KINDERGARTEN' }
-            for (const name in schoolExp) {
-              if (e.name.match(name)) {
-                type = schoolExp[name]
-              }
+            for (const [key, value] of Object.entries(define.schoolExp)) {
+              if (e.name.match(key)) type = value
             }
-            result.push({ name: e.name, type: type, schoolCode: e.schoolCode, region: key, schoolRegion: addr, address: e.address })
+            result.push({ name: e.name, type: type, schoolCode: e.schoolCode, region: region, schoolRegion: addr, address: e.address })
           })
         }
         for (const key in result) {

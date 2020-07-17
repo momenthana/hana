@@ -68,5 +68,10 @@
     "JEONBUK": "전라북도",
     "JEONNAM": "전라남도",
     "JEJU": "제주특별자치도"
+  },
+  "schoolExp": {
+    "중학교": "MIDDLE",
+    "초등학교": "ELEMENTARY",
+    "유치원": "KINDERGARTEN"
   }
 }
