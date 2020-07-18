@@ -1,6 +1,7 @@
-import schoolKr from 'school-kr'
-const school = new schoolKr()
+import School from 'school-kr'
 import fs from 'fs'
+
+const school = new School()
 
 import dateConvert from './dateConvert'
 const define = JSON.parse(fs.readFileSync('src/define.json').toString())
@@ -56,9 +57,9 @@ const index = async (text: string, channel: string, type: string) => {
     if (text.match(/검색/)) {
       let result: Array<any> = []
       if (text.match(/.*(초|중|고|학교|유치원)/)) {
-        for (const region in schoolKr.Region) {
+        for (const region in School.Region) {
           const splitText = text.match(/.*(초|중|고|학교|유치원)/)[0].split(' ')
-          const search = await school.search(schoolKr.Region[region], splitText[splitText.length - 1])
+          const search = await school.search(School.Region[region], splitText[splitText.length - 1])
           search.forEach(e => {
             let addr: any, type: any = 'HIGH'
             for (const [key, value] of Object.entries(define.region)) {
@@ -104,7 +105,7 @@ const index = async (text: string, channel: string, type: string) => {
         info.content = messages.unregistered
       } else {
         const date = dateConvert(text)
-        school.init(schoolKr.Type[data.type], schoolKr.Region[data.region], data.schoolCode)
+        school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
         info.title = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`
         info.fields = await meal(date, text.match(/(아침|조식)/) ? '조식' : text.match(/(점심|중식)/) ? '중식' : text.match(/(저녁|석식)/) ? '석식' : '급식', info)
       }
@@ -115,7 +116,7 @@ const index = async (text: string, channel: string, type: string) => {
       if (!data) {
         info.content = messages.unregistered
       } else {
-        school.init(schoolKr.Type[data.type], schoolKr.Region[data.region], data.schoolCode)
+        school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
         const calendar = await school.getCalendar({ default: null })
         info.title = `${calendar.year}년 ${calendar.month}월\n`
 

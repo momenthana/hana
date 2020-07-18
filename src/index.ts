@@ -1,6 +1,6 @@
-const { RTMClient } = require('@slack/rtm-api')
-const Discord = require('discord.js')
-const colors = require('colors')
+import { RTMClient } from '@slack/rtm-api'
+import Discord from 'discord.js'
+import colors from 'colors'
 import fs from 'fs'
 
 import school from './school'
