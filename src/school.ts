@@ -1,13 +1,13 @@
 import School from 'school-kr'
 import fs from 'fs'
-import { set } from './commands'
+import { search, set } from './commands'
 
 const school = new School()
 
 import dateConvert from './dateConvert'
 const define = JSON.parse(fs.readFileSync('src/define.json').toString())
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
-const search = {}
+const searches = {}
 
 const load = (type: string) => {
   try {
@@ -55,34 +55,8 @@ const meal = async (date: Date, type: string, info) => {
 const index = async (text: string, channel: string, type: string) => {
   let info = { title: '', content: '', fields: [] }
   if (text.includes('하나')) {
-    if (text.match(/검색/)) {
-      let result: Array<any> = []
-      if (text.match(/.*(초|중|고|학교|유치원)/)) {
-        for (const region in School.Region) {
-          const splitText = text.match(/.*(초|중|고|학교|유치원)/)[0].split(' ')
-          const search = await school.search(School.Region[region], splitText[splitText.length - 1])
-          search.forEach(e => {
-            let addr: any, type: any = 'HIGH'
-            for (const [key, value] of Object.entries(define.region)) {
-              if (region === key) addr = value
-            }
-            for (const [key, value] of Object.entries(define.schoolExp)) {
-              if (e.name.match(key)) type = value
-            }
-            result.push({ name: e.name, type: type, schoolCode: e.schoolCode, region: region, schoolRegion: addr, address: e.address })
-          })
-        }
-        for (const key in result) {
-          info.content += `\n${Number(key) + 1}. ${result[key].name} (${result[key].address !== ' ' ? result[key].address : result[key].schoolRegion ? result[key].schoolRegion + '교육청 소재' : '소재지 정보 없음'})`
-          search[channel] = result
-        }
-        info.content += '\n\'하나야 1번 등록해줘\'처럼 말해주면 채널에 등록해줄게'
-      } else {
-        info.content = '학교나 유치원 이름을 정확하게 입력해줘!'
-      }
-    }
-
-    set(text, info, search, messages, channel, type, load, save)
+    await search(text, info, searches, school, define, channel)
+    set(text, info, searches, messages, channel, type, load, save)
 
     if (text.match(/(하나!|도움|도와)/)) {
       info.content = messages.help

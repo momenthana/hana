@@ -1,6 +1,6 @@
-const set = async (text, info, search, messages, channel, type, load, save) => {
+const set = async (text, info, searches, messages, channel, type, load, save) => {
   if (text.match(/등록/)) {
-    const searchData = search[channel]
+    const searchData = searches[channel]
     if (!searchData) {
       info.content = messages.unregistered
     } else {
