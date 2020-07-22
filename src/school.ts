@@ -1,5 +1,6 @@
 import School from 'school-kr'
 import fs from 'fs'
+import { set } from './commands'
 
 const school = new School()
 
@@ -81,18 +82,7 @@ const index = async (text: string, channel: string, type: string) => {
       }
     }
 
-    if (text.match(/등록/)) {
-      const searchData = search[channel]
-      if (!searchData) {
-        info.content = messages.unregistered
-      } else {
-        const data = load(type)
-        const i = searchData[Number(text.replace(/[^{0-9}]/gi, '')) - 1]
-        info.content = `${i.name}${i.type === 'KINDERGARTEN' ? '을' : '를'} 채널에 등록했어!`
-        data[channel] = { type: i.type, region: i.region, schoolCode: i.schoolCode }
-        save(type, data)
-      }
-    }
+    set(text, info, search, messages, channel, type, load, save)
 
     if (text.match(/(하나!|도움|도와)/)) {
       info.content = messages.help
