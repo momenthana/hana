@@ -17,21 +17,21 @@ if (process.env.discordToken) {
     try {
       if (msg.author.bot) return
 
-      const embed = new Discord.RichEmbed()
+      const embed = new Discord.MessageEmbed()
         .setColor('#f7cac9')
         .setTimestamp()
-        .setFooter(msg.author.username, msg.author.avatarURL);
+        .setFooter(msg.author.username, msg.author.avatarURL());
 
       if (msg.content.match(/하나.*(핑|ping)|(핑|ping).*하나/)) {
         embed.setTitle(msg.content.includes('핑') ? '퐁!' : 'Pong!')
           .fields = [
-            { name: 'Discord Server', value: '측정중...' },
-            { name: '지연 시간', value: '측정중...' }
+            { name: 'Discord Server', value: '측정중...', inline: false },
+            { name: '지연 시간', value: '측정중...', inline: false }
           ]
         let ping = await msg.channel.send({ embed })
         embed.fields = [
-          { name: 'Discord Server', value: Math.round(discord.ping) + 'ms' },
-          { name: '지연 시간', value: ping.createdTimestamp - msg.createdTimestamp + 'ms' }
+          { name: 'Discord Server', value: Math.round(discord.ws.ping) + 'ms', inline: false },
+          { name: '지연 시간', value: ping.createdTimestamp - msg.createdTimestamp + 'ms', inline: false }
         ]
         ping.edit({ embed })
       } else {
@@ -54,7 +54,7 @@ if (process.env.discordToken) {
   const length = messages.activity.length
 
   setInterval(() => {
-    messages.activity[length] = '서버 ' + discord.guilds.size + '개에서 사용'
+    messages.activity[length] = '서버 ' + discord.guilds.cache.size + '개에서 사용'
     discord.user.setActivity(messages.activity[Math.floor(Math.random() * messages.activity.length)], {
       type: process.env.twitch ? 'STREAMING' : null,
       url: 'https://www.twitch.tv/' + process.env.twitch
