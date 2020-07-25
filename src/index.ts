@@ -3,6 +3,7 @@ import Discord from 'discord.js'
 import colors from 'colors'
 import fs from 'fs'
 
+import Embed from './embed'
 import school from './school'
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 
@@ -17,10 +18,7 @@ if (process.env.discordToken) {
     try {
       if (msg.author.bot) return
 
-      const embed = new Discord.MessageEmbed()
-        .setColor('#f7cac9')
-        .setTimestamp()
-        .setFooter(msg.author.username, msg.author.avatarURL());
+      const embed = Embed(msg)
 
       if (msg.content.match(/하나.*(핑|ping)|(핑|ping).*하나/)) {
         embed.setTitle(msg.content.includes('핑') ? '퐁!' : 'Pong!')
