@@ -1,10 +1,9 @@
 import School from 'school-kr'
 import fs from 'fs'
 import { search, set } from './commands'
+import { dateConvert } from './utils'
 
 const school = new School()
-
-import dateConvert from './dateConvert'
 const define = JSON.parse(fs.readFileSync('src/define.json').toString())
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 const searches = {}
@@ -34,7 +33,7 @@ const meal = async (date: Date, type: string, info) => {
   if (rebase.includes(`[${type}]`)) {
     const length = rebase.indexOf(`[${type}]`)
     const sub = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
-    fields.push({ name: type, value: sub.replace(/\[\S*?\]/g, '') })
+    fields.push({ name: type, value: sub.replace(/\[\S*?\]/g, ''), inline: false })
   } else if (type === '급식') {
     ['조식', '중식', '석식'].forEach(e => {
       const length = rebase.indexOf(`[${e}]`)

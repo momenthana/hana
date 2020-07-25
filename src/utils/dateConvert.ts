@@ -2,7 +2,7 @@ import fs from 'fs'
 
 const define = JSON.parse(fs.readFileSync('src/define.json').toString())
 
-const index = (text) => {
+const dateConvert = text => {
   const date = new Date()
 
   const setDate = (val, type) => {
@@ -73,4 +73,4 @@ const index = (text) => {
   return date
 }
 
-export default index
+export default dateConvert
