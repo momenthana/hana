@@ -1,4 +1,3 @@
-import { RTMClient } from '@slack/rtm-api'
 import Discord from 'discord.js'
 import colors from 'colors'
 import fs from 'fs'
@@ -7,7 +6,7 @@ import { embed } from './utils'
 
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 
-if (process.env.discordToken) {
+if (process.env.token) {
   const discord = new Discord.Client()
 
   discord.on('ready', () => {
@@ -59,42 +58,5 @@ if (process.env.discordToken) {
     })
   }, 10000)
 
-  discord.login(process.env.discordToken)
-}
-
-if (process.env.slackToken) {
-  const slack = new RTMClient(process.env.slackToken)
-
-  slack.on('member_joined_channel', async event => {
-    try {
-      const random = Math.floor(Math.random() * messages.joined.length)
-      const info = messages.joined[random].replace('${event.user}', event.user)
-      slack.sendMessage(info, event.channel)
-      console.log(colors.green(`Slack ${event.channel}\n`), info)
-    } catch (error) {
-      console.warn(colors.red(`Slack ${event.channel}\n`), error)
-    }
-  })
-
-  slack.on('message', async event => {
-    try {
-      const info = await school(event.text, event.channel, 'slack')
-
-      info.fields.forEach(e => {
-        info.content += `${e.name} ${e.value}\n`
-      })
-      
-      if (info.content) {
-        await slack.sendMessage(info.title + info.content, event.channel)
-        console.log(colors.green(`Slack ${event.channel}\n${event.text}\n`), info.title, info.content)
-      }
-    } catch (error) {
-      console.warn(colors.red(`Slack ${event.channel}\n${event.text}\n`), error)
-    }
-  });
-
-  (async () => {
-    await slack.start()
-    console.log(colors.green('Slackbot is running!'))
-  })()
+  discord.login(process.env.token)
 }
