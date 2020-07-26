@@ -3,10 +3,13 @@ import colors from 'colors'
 import fs from 'fs'
 import school from './school'
 import { embed } from './utils'
+import Koa from 'koa'
+import Router from 'koa-router'
+import bodyParser from 'koa-bodyparser'
 
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 
-if (process.env.token) {
+if (process.env.discordToken) {
   const discord = new Discord.Client()
 
   discord.on('ready', () => {
@@ -47,5 +50,44 @@ if (process.env.token) {
     })
   }, 10000)
 
-  discord.login(process.env.token)
+  discord.login(process.env.discordToken)
+}
+
+if (process.env.messengerToken) {
+  const koa = new Koa()
+  const router = new Router()
+
+  router.get('/messenger', ctx => {
+    let mode = ctx.request.query['hub.mode']
+    let token = ctx.request.query['hub.verify_token']
+    let challenge = ctx.request.query['hub.challenge']
+
+    if (mode && token) {
+      if (mode === 'subscribe' && token === process.env.messengerToken) {
+        console.log('WEBHOOK_VERIFIED')
+        ctx.body = challenge
+      } else {
+        ctx.response.status = 403
+      }
+    }
+  })
+
+  router.post('/messenger', ctx => {
+    let body = ctx.request.body
+
+    if (body.object === 'page') {
+      body.entry.forEach(entry => {
+        let webhook_event = entry.messaging[0]
+        console.log(webhook_event);
+      })
+
+      ctx.body = 'EVENT_RECEIVED'
+    } else {
+      ctx.response.status = 404
+    }
+  })
+
+  koa.use(bodyParser()).use(router.routes()).use(router.allowedMethods())
+
+  koa.listen(80)
 }
