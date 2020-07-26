@@ -1,6 +1,6 @@
 import School from 'school-kr'
 
-const search = async (text, info, searches, school, define, channel) => {
+const search = async (text, Embed, searches, school, define, channel) => {
   if (text.match(/검색/)) {
     let result: Array<any> = []
     if (text.match(/.*(초|중|고|학교|유치원)/)) {
@@ -19,12 +19,12 @@ const search = async (text, info, searches, school, define, channel) => {
         })
       }
       for (const key in result) {
-        info.content += `\n${Number(key) + 1}. ${result[key].name} (${result[key].address !== ' ' ? result[key].address : result[key].schoolRegion ? result[key].schoolRegion + '교육청 소재' : '소재지 정보 없음'})`
+        Embed.addField(`${Number(key) + 1}. ${result[key].name}`, result[key].address !== ' ' ? result[key].address : result[key].schoolRegion ? result[key].schoolRegion + '교육청 소재' : '소재지 정보 없음')
         searches[channel] = result
       }
-      info.content += '\n\'하나야 1번 등록해줘\'처럼 말해주면 채널에 등록해줄게'
+      Embed.setDescription('\'하나야 1번 등록해줘\'처럼 말해주면 채널에 등록해줄게')
     } else {
-      info.content = '학교나 유치원 이름을 정확하게 입력해줘!'
+      Embed.setDescription('학교나 유치원 이름을 정확하게 입력해줘!')
     }
   }
 }

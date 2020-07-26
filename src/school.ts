@@ -1,7 +1,7 @@
 import School from 'school-kr'
 import fs from 'fs'
 import { search, set } from './commands'
-import { dateConvert } from './utils'
+import { dateConvert, embed } from './utils'
 
 const school = new School()
 const define = JSON.parse(fs.readFileSync('src/define.json').toString())
@@ -16,72 +16,70 @@ const load = (type: string) => {
   }
 }
 
-const save = (type: string, info: object) => {
+const save = (type: string, data: object) => {
   try {
-    fs.writeFileSync(`data/${type}.json`, JSON.stringify(info))
+    fs.writeFileSync(`data/${type}.json`, JSON.stringify(data))
   } catch {
     fs.mkdirSync('data')
-    fs.writeFileSync(`data/${type}.json`, JSON.stringify(info))
+    fs.writeFileSync(`data/${type}.json`, JSON.stringify(data))
   }
 }
 
-const meal = async (date: Date, type: string, info) => {
+const meal = async (date: Date, type: string, Embed) => {
   let meal = await school.getMeal({ year: date.getFullYear(), month: date.getMonth() + 1 })
   let rebase = meal[date.getDate()].replace(/[0-9*.]|amp;|\//gi, '')
-  let fields = []
 
   if (rebase.includes(`[${type}]`)) {
     const length = rebase.indexOf(`[${type}]`)
     const sub = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
-    fields.push({ name: type, value: sub.replace(/\[\S*?\]/g, ''), inline: false })
+    Embed.addField(type, sub.replace(/\[\S*?\]/g, ''), false)
   } else if (type === '급식') {
     ['조식', '중식', '석식'].forEach(e => {
       const length = rebase.indexOf(`[${e}]`)
       const sub = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
       if (sub) {
-        fields.push({ name: e, value: sub.replace(/\[\S*?\]/g, ''), inline: true })
+        Embed.addField(e, sub.replace(/\[\S*?\]/g, ''), true)
       }
     })
   }
 
-  if (!fields.length) {
-    info.content = type + '이 없습니다'
+  if (!Embed.fields.length) {
+    Embed.setDescription(type + '이 없습니다')
   }
 
-  return fields
+  return Embed
 }
 
-const index = async (text: string, channel: string, type: string) => {
-  let info = { title: '', content: '', fields: [] }
+const index = async (type: string, channel: string, text: string, msg: object) => {
+  const Embed = embed(msg)
   if (text.includes('하나')) {
-    await search(text, info, searches, school, define, channel)
-    set(text, info, searches, messages, channel, type, load, save)
+    await search(text, Embed, searches, school, define, channel)
+    set(text, Embed, searches, messages, channel, type, load, save)
 
     if (text.match(/(하나!|도움|도와)/)) {
-      info.content = messages.help
-      type === 'discord' ? info.content += '\n다른건 <@457459470424080384> 또는 momenthana@kakao.com으로 질문해줘!' : '\n다른건 momenthana@kakao.com으로 질문해줘!'
+      return Embed.setDescription(messages.help)
     }
 
     if (text.match(/(아침|조식|점심|중식|저녁|석식|급식)/)) {
       const data = load(type)[channel]
       if (!data) {
-        info.content = messages.unregistered
+        return Embed.setDescription(messages.unregistered)
       } else {
         const date = dateConvert(text)
         school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
-        info.title = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`
-        info.fields = await meal(date, text.match(/(아침|조식)/) ? '조식' : text.match(/(점심|중식)/) ? '중식' : text.match(/(저녁|석식)/) ? '석식' : '급식', info)
+        Embed.setTitle(`${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`)
+        return await meal(date, text.match(/(아침|조식)/) ? '조식' : text.match(/(점심|중식)/) ? '중식' : text.match(/(저녁|석식)/) ? '석식' : '급식', Embed)
       }
     }
 
     if (text.includes('일정')) {
       const data = load(type)[channel]
       if (!data) {
-        info.content = messages.unregistered
+        return Embed.setDescription(messages.unregistered)
       } else {
         school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
         const calendar = await school.getCalendar({ default: null })
-        info.title = `${calendar.year}년 ${calendar.month}월\n`
+        Embed.setTitle(`${calendar.year}년 ${calendar.month}월\n`)
 
         calendar.year = undefined
         calendar.month = undefined
@@ -90,14 +88,14 @@ const index = async (text: string, channel: string, type: string) => {
 
         for (const day in calendar) {
           if (calendar[day]) {
-            info.fields.push({ name: day + '일', value: calendar[day].replace(/,/g, '\n') })
+            Embed.addField(day + '일', calendar[day].replace(/,/g, '\n'))
           }
         }
       }
     }
   }
 
-  return info
+  return Embed
 }
 
 export default index
