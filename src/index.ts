@@ -6,6 +6,7 @@ import { embed } from './utils'
 import Koa from 'koa'
 import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
+import axios from 'axios'
 
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 
@@ -78,7 +79,16 @@ if (process.env.messengerToken) {
     if (body.object === 'page') {
       body.entry.forEach(entry => {
         let webhook_event = entry.messaging[0]
-        console.log(webhook_event);
+
+        axios.post('https://graph.facebook.com/v7.0/me/messages?access_token=' + process.env.messengerToken, {
+          messaging_type: "RESPONSE",
+          recipient: {
+            id: webhook_event.sender.id
+          },
+          message: {
+            text: "hello, world!"
+          }
+        })
       })
 
       ctx.body = 'EVENT_RECEIVED'

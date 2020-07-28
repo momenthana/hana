@@ -13,6 +13,7 @@
   "author": "Hana <momenthana@kakao.com>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.19.2",
     "colors": "^1.4.0",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
