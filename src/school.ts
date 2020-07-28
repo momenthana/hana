@@ -27,6 +27,7 @@ const save = (type: string, data: object) => {
 
 const meal = async (date: Date, type: string, Embed) => {
   let meal = await school.getMeal({ year: date.getFullYear(), month: date.getMonth() + 1 })
+
   let rebase = meal[date.getDate()].replace(/[0-9*.]|amp;|\//gi, '')
 
   if (rebase.includes(`[${type}]`)) {
@@ -50,8 +51,7 @@ const meal = async (date: Date, type: string, Embed) => {
   return Embed
 }
 
-const index = async (type: string, channel: string, text: string, msg: object) => {
-  const Embed = embed(msg)
+const index = async (type: string, channel: string, text: string, Embed) => {
   if (text.includes('하나')) {
     await search(text, Embed, searches, school, define, channel)
     set(text, Embed, searches, messages, channel, type, load, save)

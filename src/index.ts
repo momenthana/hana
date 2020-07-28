@@ -32,9 +32,10 @@ if (process.env.discordToken) {
           .addField('지연 시간', ping.createdTimestamp - msg.createdTimestamp + 'ms')
         ping.edit(Embed)
       } else {
-        const Embed = await school('discord', msg.channel.id, msg.content, msg)
-        if (Embed.description || Embed.fields.length) {
-          await msg.channel.send(Embed)
+        const Embed = embed(msg)
+        const result = await school('discord', msg.channel.id, msg.content, Embed)
+        if (result.description || result.fields.length) {
+          await msg.channel.send(result)
         }
       }
     } catch (error) {
@@ -77,18 +78,28 @@ if (process.env.messengerToken) {
     let body = ctx.request.body
 
     if (body.object === 'page') {
-      body.entry.forEach(entry => {
+      body.entry.forEach(async entry => {
         let webhook_event = entry.messaging[0]
 
-        axios.post('https://graph.facebook.com/v7.0/me/messages?access_token=' + process.env.messengerToken, {
-          messaging_type: "RESPONSE",
-          recipient: {
-            id: webhook_event.sender.id
-          },
-          message: {
-            text: "hello, world!"
+        const Embed = new Discord.MessageEmbed()
+        const result = await school('messenger', webhook_event.recipient.id, webhook_event.message.text, Embed)
+        if (result.description || result.fields.length) {
+          let fields = ''
+          if (result.fields.length) {
+            result.fields.forEach(element => {
+              fields += element.name + element.value + '\n'
+            })
           }
-        })
+          axios.post('https://graph.facebook.com/v7.0/me/messages?access_token=' + process.env.messengerToken, {
+            messaging_type: "RESPONSE",
+            recipient: {
+              id: webhook_event.sender.id
+            },
+            message: {
+              text: (result.title ? result.title + '\n' : '') + (result.description ? result.description + '\n' : '') + fields
+            }
+          })
+        }
       })
 
       ctx.body = 'EVENT_RECEIVED'
@@ -99,5 +110,5 @@ if (process.env.messengerToken) {
 
   koa.use(bodyParser()).use(router.routes()).use(router.allowedMethods())
 
-  koa.listen(80)
+  koa.listen(3000)
 }
