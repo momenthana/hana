@@ -32,8 +32,7 @@ if (process.env.discordToken) {
           .addField('지연 시간', ping.createdTimestamp - msg.createdTimestamp + 'ms')
         ping.edit(Embed)
       } else {
-        const Embed = embed(msg)
-        const result = await school('discord', msg.channel.id, msg.content, Embed)
+        const result = await school('discord', msg.channel.id, msg.content, embed(msg))
         if (result.description || result.fields.length) {
           await msg.channel.send(result)
         }
@@ -81,8 +80,7 @@ if (process.env.messengerToken) {
       body.entry.forEach(async entry => {
         let webhook_event = entry.messaging[0]
 
-        const Embed = new Discord.MessageEmbed()
-        const result = await school('messenger', webhook_event.recipient.id, webhook_event.message.text, Embed)
+        const result = await school('messenger', webhook_event.recipient.id, webhook_event.message.text, new Discord.MessageEmbed())
         if (result.description || result.fields.length) {
           let fields = ''
           if (result.fields.length) {
