@@ -1,21 +1,12 @@
 import School from 'school-kr'
 import fs from 'fs'
 import { search, set } from './commands'
-import { dateConvert, load } from './utils'
+import { dateConvert, load, save } from './utils'
 
 const school = new School()
 const define = JSON.parse(fs.readFileSync('src/define.json').toString())
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 const searches = {}
-
-const save = (type: string, data: object) => {
-  try {
-    fs.writeFileSync(`data/${type}.json`, JSON.stringify(data))
-  } catch {
-    fs.mkdirSync('data')
-    fs.writeFileSync(`data/${type}.json`, JSON.stringify(data))
-  }
-}
 
 const meal = async (date: Date, type: string, embed) => {
   let meal = await school.getMeal({ year: date.getFullYear(), month: date.getMonth() + 1 })
