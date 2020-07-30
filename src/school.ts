@@ -1,11 +1,10 @@
 import School from 'school-kr'
-import fs from 'fs'
 import { search, set } from './commands'
 import { dateConvert, load, save } from './utils'
 
 const school = new School()
-const define = JSON.parse(fs.readFileSync('src/define.json').toString())
-const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
+const define = load('src/define.json')
+const messages = load('src/messages.json')
 const searches = {}
 
 const meal = async (date: Date, type: string, embed) => {
@@ -44,7 +43,7 @@ const index = async (type: string, channel: string, text: string, embed) => {
     }
 
     if (text.match(/(아침|조식|점심|중식|저녁|석식|급식)/)) {
-      const data = load(type)[channel]
+      const data = load(`data/${type}.json`)[channel]
       if (!data) {
         return embed.setDescription(messages.unregistered)
       } else {
@@ -56,7 +55,7 @@ const index = async (type: string, channel: string, text: string, embed) => {
     }
 
     if (text.includes('일정')) {
-      const data = load(type)[channel]
+      const data = load(`data/${type}.json`)[channel]
       if (!data) {
         return embed.setDescription(messages.unregistered)
       } else {
