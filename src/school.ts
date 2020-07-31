@@ -1,5 +1,5 @@
 import School from 'school-kr'
-import { search, set } from './commands'
+import { search, set, help } from './commands'
 import { dateConvert, load, save } from './utils'
 
 const school = new School()
@@ -37,10 +37,7 @@ const index = async (type: string, channel: string, text: string, embed) => {
   if (text.includes('하나')) {
     await search(text, embed, searches, school, define, channel)
     set(text, embed, searches, messages, channel, type, load, save)
-
-    if (text.match(/(하나!|도움|도와)/)) {
-      return embed.setDescription(messages.help)
-    }
+    help(text, embed, messages)
 
     if (text.match(/(아침|조식|점심|중식|저녁|석식|급식)/)) {
       const data = load(`data/${type}.json`)[channel]
