@@ -1,5 +1,5 @@
 import School from 'school-kr'
-import { search, set, help } from './commands'
+import { help, schedule, search, set } from './commands'
 import { dateConvert, load, save } from './utils'
 
 const school = new School()
@@ -35,9 +35,10 @@ const meal = async (date: Date, type: string, embed) => {
 
 const index = async (type: string, channel: string, text: string, embed) => {
   if (text.includes('하나')) {
+    help(text, embed, messages)
+    await schedule(text, channel, embed, type, school)
     await search(text, embed, searches, school, define, channel)
     set(text, embed, searches, messages, channel, type, load, save)
-    help(text, embed, messages)
 
     if (text.match(/(아침|조식|점심|중식|저녁|석식|급식)/)) {
       const data = load(`data/${type}.json`)[channel]
@@ -48,28 +49,6 @@ const index = async (type: string, channel: string, text: string, embed) => {
         school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
         embed.setTitle(`${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`)
         return await meal(date, text.match(/(아침|조식)/) ? '조식' : text.match(/(점심|중식)/) ? '중식' : text.match(/(저녁|석식)/) ? '석식' : '급식', embed)
-      }
-    }
-
-    if (text.includes('일정')) {
-      const data = load(`data/${type}.json`)[channel]
-      if (!data) {
-        return embed.setDescription(messages.unregistered)
-      } else {
-        school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
-        const calendar = await school.getCalendar({ default: null })
-        embed.setTitle(`${calendar.year}년 ${calendar.month}월\n`)
-
-        calendar.year = undefined
-        calendar.month = undefined
-        calendar.day = undefined
-        calendar.today = undefined
-
-        for (const day in calendar) {
-          if (calendar[day]) {
-            embed.addField(day + '일', calendar[day].replace(/,/g, '\n'))
-          }
-        }
       }
     }
   }
