@@ -1,5 +1,5 @@
 import School from 'school-kr'
-import { load } from '../utils'
+import { dateConvert, load } from '../utils'
 
 const messages = load('src/messages.json')
 const define = load('src/define.json')
@@ -30,7 +30,7 @@ const mealConvert = async (date: Date, type: string, embed, school) => {
   return embed
 }
 
-const meal = async (text, channel, embed, type, school, dateConvert) => {
+const meal = async (text, channel, embed, type, school) => {
   if (text.match(/(아침|조식|점심|중식|저녁|석식|급식)/)) {
     const data = load(`data/${type}.json`)[channel]
     if (!data) {
