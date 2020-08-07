@@ -6,66 +6,78 @@ const dateConvert = text => {
   const date = new Date()
 
   const setDate = (val, type) => {
-    if (text.match(/(전|저|지)/)) {
+    if (text.match(/전|저|지/)) {
       type === 'Y' ? date.setFullYear(date.getFullYear() - val) : type === 'M' ? date.setMonth(date.getMonth() - val) : date.setDate(date.getDate() - val)
-    } else if (text.match(/(후|뒤|다)/)) {
+    } else if (text.match(/후|뒤|다/)) {
       type === 'Y' ? date.setFullYear(date.getFullYear() + val) : type === 'M' ? date.setMonth(date.getMonth() + val) : date.setDate(date.getDate() + val)
     } else {
       type === 'Y' ? date.setFullYear(val) : type === 'M' ? date.setMonth(val - 1) : date.setDate(val)
     }
   }
 
+  const setFixedDate = (val, type) => {
+    type === 'Y' ? date.setFullYear(val) : type === 'M' ? date.setMonth(val - 1) : date.setDate(val)
+  }
+
   for (const i in define.week) {
     if (text.match(RegExp(define.week[i] + '요일'))) {
-      date.setDate(date.getDate() + (Number(i) - date.getDay()))
+      setFixedDate(date.getDate() + (Number(i) - date.getDay()), 'D')
     }
   }
 
-  if (text.match(/(일|월|달)/) && text.replace(/[^{0-9}]/gi, '')) {
-    setDate(Number(text.replace(/[^{0-9}]/gi, '')), text.match(/(월|달)/) ? 'M' : '')
-  }
-
-  if (text.includes('주')) {
-    setDate(text.match(/(다|저|지)/g).length * 7, 'D')
-  } else if (text.includes('해')) {
-    setDate(text.match(/(다|저|지)/g).length, 'Y')
+  if (text.match(/일|월|달/) && text.match(/[0-9]/)) {
+    setDate(Number(text.replace(/[^0-9]/g, '')), text.match(/월|달/) ? 'M' : 'D')
   }
 
   for (const i in define.dateExp) {
     if (text.match(RegExp(define.dateExp[i]))) {
-      setDate(date.getDate() - 3 + Number(i), 'D')
+      setFixedDate(date.getDate() - 3 + Number(i), 'D')
     }
   }
 
-  if (text.includes('년')) {
-    setDate(Number(text.replace(/[^{0-9}]/gi, '')), 'Y')
+  if (text.match(/주/)) {
+    setDate(text.match(/다|저|지/g).length * 7, 'D')
+  }
+
+  if (text.match(/달/)) {
+    setDate(text.match(/다|저|지/g).length, 'M')
+  }
+
+  if (text.match(/해/)) {
+    setDate(text.match(/다|저|지/g).length, 'Y')
+  }
+
+  if (text.match(/년/)) {
+    if (text.match(/[0-9]/)) {
+      setDate(Number(text.replace(/[^0-9]/g, '')), 'Y')
+    }
+
+    const getFullYear = date.getFullYear()
     for (const i in define.dateYearExp) {
       if (text.match(RegExp(define.dateYearExp[i]))) {
-        setDate(date.getFullYear() - 3 + Number(i), 'Y')
+        setFixedDate(getFullYear - 3 + Number(i), 'Y')
       }
     }
   }
   
-  if (text.includes('열흘')) {
-    setDate(10, 'D')
-  } else if (text.includes('스무날')) {
-    setDate(20, 'D')
-  } else if (text.includes('보름')) {
-    setDate(15, 'D')
-  } else if (text.includes('그믐')) {
-    setDate(30, 'D')
+  if (text.match(/열흘/)) {
+    setFixedDate(10, 'D')
+  } else if (text.match(/스무날/)) {
+    setFixedDate(20, 'D')
+  } else if (text.match(/보름/)) {
+    setFixedDate(15, 'D')
+  } else if (text.match(/그믐/)) {
+    setFixedDate(30, 'D')
   } else {
     for (const key in define.dateCentury) {
-      if (text.includes(define.dateCentury[key]) || text.includes(define.dateCenturyAbbr[key])) {
-        if (text.includes('열')) {
-          setDate(Number(key) + 11, 'D')
-        } else if (text.includes('스무')) {
-          setDate(Number(key) + 21, 'D')
+      if (text.match(RegExp(`${define.dateCentury[key]}|${define.dateCenturyAbbr[key]}`))) {
+        if (text.match(/열/)) {
+          setFixedDate(Number(key) + 11, 'D')
+        } else if (text.match(/스무/)) {
+          setFixedDate(Number(key) + 21, 'D')
         } else {
-          setDate(Number(key) + 1, 'D')
+          setFixedDate(Number(key) + 1, 'D')
         }
-
-        return date
       }
     }
   }
