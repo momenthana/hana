@@ -19,12 +19,6 @@ const dateConvert = text => {
     type === 'Y' ? date.setFullYear(val) : type === 'M' ? date.setMonth(val - 1) : date.setDate(val)
   }
 
-  for (const i in define.week) {
-    if (text.match(RegExp(define.week[i] + '요일'))) {
-      setFixedDate(date.getDate() + (Number(i) - date.getDay()), 'D')
-    }
-  }
-
   if (text.match(/일|월|달/) && text.match(/[0-9]/)) {
     setDate(Number(text.replace(/[^0-9]/g, '')), text.match(/월|달/) ? 'M' : 'D')
   }
@@ -79,6 +73,12 @@ const dateConvert = text => {
           setFixedDate(Number(key) + 1, 'D')
         }
       }
+    }
+  }
+
+  for (const i in define.week) {
+    if (text.match(RegExp(define.week[i] + '요일'))) {
+      setFixedDate(date.getDate() + (Number(i) - date.getDay()), 'D')
     }
   }
 
