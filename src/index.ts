@@ -1,12 +1,13 @@
 import Discord from 'discord.js'
 import colors from 'colors'
 import fs from 'fs'
-import school from './school'
-import { embed } from './utils'
 import Koa from 'koa'
 import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
 import axios from 'axios'
+import school from './school'
+import { embed } from './utils'
+import { ping } from './commands'
 
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 
@@ -21,21 +22,11 @@ if (process.env.discordToken) {
     try {
       if (msg.author.bot) return
 
-      if (msg.content.match(/하나.*(핑|ping)|(핑|ping).*하나/)) {
-        const Embed = embed(msg)
-        Embed.setTitle(msg.content.includes('핑') ? '퐁!' : 'Pong!')
-          .addField('Discord Server', '측정중...')
-          .addField('지연 시간', '측정중...')
-        let ping = await msg.channel.send(Embed)
-        Embed.fields = []
-        Embed.addField('Discord Server', Math.round(discord.ws.ping) + 'ms')
-          .addField('지연 시간', ping.createdTimestamp - msg.createdTimestamp + 'ms')
-        ping.edit(Embed)
-      } else {
-        const result = await school('discord', msg.channel.id, msg.content, embed(msg))
-        if (result.description || result.fields.length) {
-          await msg.channel.send(result)
-        }
+      ping(msg, embed(msg), discord)
+
+      const result = await school('discord', msg.channel.id, msg.content, embed(msg))
+      if (result.description || result.fields.length) {
+        await msg.channel.send(result)
       }
     } catch (error) {
       console.warn(error)
