@@ -1,5 +1,5 @@
 import School from 'school-kr'
-import { help, meal, schedule, search, set } from './commands'
+import { help, meal, schedule, search, set, uptime } from './commands'
 
 const school = new School()
 const searches = {}
@@ -11,6 +11,7 @@ const index = async (type: string, channel: string, text: string, embed) => {
     await schedule(text, channel, embed, type, school)
     await search(text, channel, embed, school, searches)
     set(text, channel, embed, type, searches)
+    uptime(text, embed)
   }
 
   return embed

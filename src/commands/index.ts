@@ -4,6 +4,7 @@ import meal from './meal'
 import schedule from './schedule'
 import search from './search'
 import set from './set'
+import uptime from './uptime'
 
 export {
   help,
@@ -11,5 +12,6 @@ export {
   meal,
   schedule,
   search,
-  set
+  set,
+  uptime
 }
