@@ -2,7 +2,7 @@ import { load, save } from '../utils'
 
 const messages = load('src/messages.json')
 
-const set = async (text: string, embed, channel: string, type: string, searches) => {
+const set = async (text: string, embed, channel: string, type: string, school, searches) => {
   const searchData = searches[channel]
   if (!searchData) {
     embed.setDescription(messages.unregistered)

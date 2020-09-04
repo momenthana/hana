@@ -1,5 +1,8 @@
+
+import School from 'school-kr'
 import { help, meal, schedule, search, set, uptime } from './commands'
 
+const school = new School()
 const searches = {}
 
 const commands = {
@@ -15,7 +18,7 @@ const index = async (type: string, channel: string, text: string, embed) => {
   if (text.includes('하나')) {
     for (const [regexp, command] of Object.entries(commands)) {
       if (text.match(RegExp(regexp, 'i'))) {
-        await command(text, embed, channel, type, searches)
+        await command(text, embed, channel, type, school, searches)
         return embed
       }
     }

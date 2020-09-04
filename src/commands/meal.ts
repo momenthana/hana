@@ -27,21 +27,20 @@ const mealConvert = async (date: Date, type: string, embed, school) => {
     embed.setDescription(type + '이 없습니다')
   }
 
-  return embed
+  return
 }
 
-const meal = async (text, embed, channel, type) => {
-  const school = new School()
-
+const meal = async (text, embed, channel, type, school) => {
   const data = load(`data/${type}.json`)[channel]
   if (!data) {
-    return embed.setDescription(messages.unregistered)
-  } else {
-    const date = dateConvert(text)
-    school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
-    embed.setTitle(`${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`)
-    return await mealConvert(date, text.match(/(아침|조식)/) ? '조식' : text.match(/(점심|중식)/) ? '중식' : text.match(/(저녁|석식)/) ? '석식' : '급식', embed, school)
+    embed.setDescription(messages.unregistered)
+    return
   }
+
+  const date = dateConvert(text)
+  school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
+  embed.setTitle(`${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`)
+  return await mealConvert(date, text.match(/(아침|조식)/) ? '조식' : text.match(/(점심|중식)/) ? '중식' : text.match(/(저녁|석식)/) ? '석식' : '급식', embed, school)
 }
 
 export default meal
