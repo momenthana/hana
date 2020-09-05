@@ -6,7 +6,8 @@ const messages = load('src/messages.json')
 const schedule = async (text: string, embed, channel: string, type: string, school) => {
   const data = load(`data/${type}.json`)[channel]
   if (!data) {
-    return embed.setDescription(messages.unregistered)
+    embed.setDescription(messages.unregistered)
+    return
   }
 
   school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
