@@ -25,7 +25,7 @@ if (process.env.discordToken) {
       ping(msg, embed(msg), discord)
 
       const result = await school('discord', msg.channel.id, msg.content, embed(msg))
-      if (result.description || result.fields.length) {
+      if (result && (result.description || result.fields.length)) {
         await msg.channel.send(result)
       }
     } catch (error) {
@@ -72,7 +72,7 @@ if (process.env.messengerToken) {
         let webhook_event = entry.messaging[0]
 
         const result = await school('messenger', webhook_event.sender.id, webhook_event.message.text, new Discord.MessageEmbed())
-        if (result.description || result.fields.length) {
+        if (result && (result.description || result.fields.length)) {
           let fields = ''
           if (result.fields.length) {
             result.fields.forEach(element => {
