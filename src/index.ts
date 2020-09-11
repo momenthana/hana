@@ -22,6 +22,11 @@ if (process.env.discordToken) {
     try {
       if (msg.author.bot) return
 
+      if (msg.system) {
+        msg.react('👋')
+        return
+      }
+
       ping(msg, embed(msg), discord)
 
       const result = await school('discord', msg.channel.id, msg.content, embed(msg))
