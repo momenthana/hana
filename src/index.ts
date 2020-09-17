@@ -28,12 +28,12 @@ if (process.env.discordToken) {
         return
       }
 
+      if (!msg.content.includes(discord.user.username)) return
+
       ping(msg, embed(msg), discord)
 
       const result = await school('discord', msg.channel.id, msg.content, embed(msg))
-      if (result && (result.description || result.fields.length)) {
-        await msg.channel.send(result)
-      }
+      if (result && (result.description || result.fields.length)) await msg.channel.send(result)
     } catch (error) {
       console.warn(error)
     }

@@ -16,12 +16,10 @@ const commands = {
 }
 
 const index = async (type: string, channel: string, text: string, embed) => {
-  if (text.includes('하나')) {
-    for (const [regexp, command] of Object.entries(commands)) {
-      if (text.match(RegExp(regexp, 'i'))) {
-        await command(text, embed, channel, type, school, searches)
-        return embed
-      }
+  for (const [regexp, command] of Object.entries(commands)) {
+    if (text.match(RegExp(regexp, 'i'))) {
+      await command(text, embed, channel, type, school, searches)
+      return embed
     }
   }
 }
