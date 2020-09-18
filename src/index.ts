@@ -28,7 +28,7 @@ if (process.env.discordToken) {
         return
       }
 
-      if (!msg.content.includes(discord.user.username)) return
+      if (!(msg.content.includes(discord.user.username)) != (msg.mentions.users.first() ? discord.user.id == msg.mentions.users.first().id : false)) return
 
       ping(msg, embed(msg), discord)
 

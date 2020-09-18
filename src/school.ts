@@ -7,7 +7,7 @@ const searches = {}
 
 const commands = {
   'help|도움|도와줘': help,
-  'invite|초대|링크|주소|추가': invite,
+  'invite|초대링크|초대주소': invite,
   'meal|아침|조식|점심|중식|저녁|석식|급식': meal,
   'schedule|일정': schedule,
   'search|검색': search,
