@@ -1,5 +1,5 @@
 const ping = async (msg, embed, discord) => {
-  if (msg.content.match(/하나.*(핑|ping)|(핑|ping).*하나/)) {
+  if (msg.content.match(/핑|ping/)) {
     embed.setTitle(msg.content.includes('핑') ? '퐁!' : 'Pong!')
       .addField('Discord Server', '측정중...')
       .addField('지연 시간', '측정중...')
