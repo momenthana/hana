@@ -7,7 +7,6 @@ import bodyParser from 'koa-bodyparser'
 import axios from 'axios'
 import school from './school'
 import { embed } from './utils'
-import { ping } from './commands'
 
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 
@@ -30,9 +29,7 @@ if (process.env.discordToken) {
 
       if (!(msg.content.includes(discord.user.username)) != (msg.mentions.users.first() ? discord.user.id == msg.mentions.users.first().id : false)) return
 
-      ping(msg, embed(msg), discord)
-
-      const result = await school('discord', msg.channel.id, msg.content, embed(msg))
+      const result = await school('discord', msg.channel.id, msg.content, embed(msg), discord, msg)
       if (result && (result.description || result.fields.length)) await msg.channel.send(result)
     } catch (error) {
       console.warn(error)
@@ -77,7 +74,7 @@ if (process.env.messengerToken) {
       body.entry.forEach(async entry => {
         let webhook_event = entry.messaging[0]
 
-        const result = await school('messenger', webhook_event.sender.id, webhook_event.message.text, new Discord.MessageEmbed())
+        const result = await school('messenger', webhook_event.sender.id, webhook_event.message.text, new Discord.MessageEmbed(), null, null)
         if (result && (result.description || result.fields.length)) {
           let fields = ''
           if (result.fields.length) {

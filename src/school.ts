@@ -1,6 +1,5 @@
-
 import School from 'school-kr'
-import { help, invite, meal, remove, schedule, search, set, uptime } from './commands'
+import { help, invite, meal, ping, remove, schedule, search, set, uptime } from './commands'
 
 const school = new School()
 const searches = {}
@@ -9,6 +8,7 @@ const commands = {
   'help|도움|도와줘': help,
   'invite|초대링크|초대주소': invite,
   'meal|아침|조식|점심|중식|저녁|석식|급식': meal,
+  'ping|핑': ping,
   'remove|삭제|제거': remove,
   'schedule|일정': schedule,
   'search|검색': search,
@@ -16,10 +16,10 @@ const commands = {
   'uptime|업타임': uptime,
 }
 
-const index = async (type: string, channel: string, text: string, embed) => {
+const index = async (type: string, channel: string, text: string, embed, discord, msg) => {
   for (const [regexp, command] of Object.entries(commands)) {
     if (text.match(RegExp(regexp, 'i'))) {
-      await command(text, embed, channel, type, school, searches)
+      await command(text, embed, channel, type, school, searches, discord, msg)
       return embed
     }
   }
