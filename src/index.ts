@@ -36,10 +36,8 @@ if (process.env.discordToken) {
     }
   })
 
-  const length = messages.activity.length
-  setInterval(async () => {
-    messages.activity[length] = '서버 ' + discord.guilds.cache.size + '개에서 사용'
-    await discord.user.setActivity(messages.activity[Math.floor(Math.random() * messages.activity.length)], {
+  setInterval(() => {
+    discord.user.setActivity(eval(messages.activity[Math.floor(Math.random() * messages.activity.length)]), {
       type: process.env.twitch ? 'STREAMING' : null,
       url: 'https://www.twitch.tv/' + process.env.twitch
     })

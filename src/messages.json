@@ -1,23 +1,14 @@
 {
   "activity": [
-    "'하나야 급식'처럼 부탁하라고",
-    "'하나야 일정'처럼 부탁하라고",
-    "'하나야 하나유치원 검색'처럼 부탁하라고",
-    "'하나야 하나초 검색'처럼 부탁하라고",
-    "'하나야 하나중 검색'처럼 부탁하라고",
-    "'하나야 하나고 검색'처럼 부탁하라고"
-  ],
-  "joined": [
-    "안녕, 친구들! <@${event.user}> 등장!",
-    "우린 당신을 기다리고 있었어요 <@${event.user}> 님",
-    "새인가요? 비행기인가요? 아, 신경 쓰지 마세요, 그냥 <@${event.user}> 님이네요.",
-    "<@${event.user}> 님이 파티에 참가하셨어요.",
-    "저기요! 들어봐요! <@${event.user}> 님이 참가하셨어요!",
-    "<@${event.user}>님이 배틀 버스에 탑승했어요.",
-    "마음의 준비를 하세요. <@${event.user}> 님이 방금 서버에 참가하셨어요.",
-    "안녕하세요. 혹시 <@${event.user}> 님을 찾고 계신가요?",
-    "<@${event.user}> 님이 어디로 가셨을까요? 이 서버에 있으시네요!",
-    "<@${event.user}> 님이 서버에 스폰하셨어요."
+    "`서버 ${discord.guilds.cache.size}개에서 사용`",
+    "`'@${discord.user.username} 급식' 입력`",
+    "`'@${discord.user.username} 내일 급식' 입력`",
+    "`'@${discord.user.username} 월요일 급식' 입력`",
+    "`'@${discord.user.username} 일정' 입력`",
+    "`'@${discord.user.username} 하나유치원 검색' 입력`",
+    "`'@${discord.user.username} 하나초 검색' 입력`",
+    "`'@${discord.user.username} 하나중 검색' 입력`",
+    "`'@${discord.user.username} 하나고 검색' 입력`"
   ],
   "unregistered": "채널에 등록된 학교나 유치원이 없어!\n'하나야 하나고 검색해줘'처럼 물어보면 찾아줄게"
 }
