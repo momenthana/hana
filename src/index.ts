@@ -29,7 +29,7 @@ if (process.env.discordToken) {
 
       if (!(msg.content.includes(discord.user.username)) != (msg.mentions.users.first() ? discord.user.id == msg.mentions.users.first().id : false)) return
 
-      const result = await school('discord', msg.channel.id, msg.content, embed(msg), discord, msg)
+      const result = await school('discord', msg.channel.id, msg.content.replace(/<@!?(\d+)>/g, ''), embed(msg), discord, msg)
       if (result && (result.description || result.fields.length)) await msg.channel.send(result)
     } catch (error) {
       console.warn(error)
