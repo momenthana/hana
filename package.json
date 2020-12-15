@@ -4,9 +4,7 @@
   "scripts": {
     "start": "ts-node -r dotenv/config src/index",
     "dev": "ts-node-dev -r dotenv/config src/index dotenv_config_path=.env.dev",
-    "lint": "eslint src/*.js --fix",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "lint": "eslint src/*.js --fix"
   },
   "main": "src/index.ts",
   "repository": "https://github.com/momenthana/hana.git",
@@ -26,11 +24,6 @@
     "typescript": "^3.9.6"
   },
   "devDependencies": {
-    "@vuepress/plugin-active-header-links": "^1.5.0",
-    "@vuepress/plugin-back-to-top": "^1.5.0",
-    "@vuepress/plugin-medium-zoom": "^1.5.0",
-    "@vuepress/plugin-nprogress": "^1.5.0",
-    "@vuepress/plugin-pwa": "^1.5.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.20.0",
@@ -38,8 +31,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "nodemon": "^2.0.2",
-    "ts-node-dev": "^1.0.0-pre.51",
-    "vuepress": "^1.2.0"
+    "ts-node-dev": "^1.0.0-pre.51"
   },
   "eslintConfig": {
     "root": true,
