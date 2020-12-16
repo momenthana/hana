@@ -1,4 +1,4 @@
-const uptime = (text, embed) => {
+const uptime = ({msg, embed}) => {
   let uptime = process.uptime()
   let sec = Math.floor(uptime % 60)
   let min = Math.floor(uptime / 60 % 60)
@@ -7,6 +7,7 @@ const uptime = (text, embed) => {
 
   embed.setTitle('Uptime!')
     .setDescription(`${day ? day + '일' : ''} ${hour ? hour + '시간' : ''} ${min ? min + '분' : ''} ${sec}초`)
+  msg.channel.send(embed)
 }
 
 export default uptime

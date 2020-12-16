@@ -1,46 +1,48 @@
-import School from 'school-kr'
+const school = require('school-info')
 import { dateConvert, load } from '../utils'
 
 const messages = load('src/messages.json')
 const define = load('src/define.json')
 
-const mealConvert = async (date: Date, type: string, embed, school) => {
-  let meal = await school.getMeal({ year: date.getFullYear(), month: date.getMonth() + 1 })
+const meal = async ({ msg, embed }) => {
+  const data = load('data/school.json')[msg.channel.id]
 
-  let rebase = meal[date.getDate()].replace(/[0-9*.]|amp;|\//gi, '')
-
-  if (rebase.includes(`[${type}]`)) {
-    const length = rebase.indexOf(`[${type}]`)
-    const sub = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
-    embed.addField(type, sub.replace(/\[\S*?\]/g, ''), false)
-  } else if (type === '급식') {
-    ['조식', '중식', '석식'].forEach(e => {
-      const length = rebase.indexOf(`[${e}]`)
-      const sub = rebase.substring(length, rebase.indexOf('[', length + 1) !== -1 ? rebase.indexOf('[', length + 1) : rebase.length)
-      if (sub) {
-        embed.addField(e, sub.replace(/\[\S*?\]/g, ''), true)
-      }
-    })
-  }
-
-  if (!embed.fields.length) {
-    embed.setDescription(type + '이 없습니다')
-  }
-
-  return
-}
-
-const meal = async (text, embed, channel, type, school) => {
-  const data = load(`data/${type}.json`)[channel]
   if (!data) {
     embed.setDescription(messages.unregistered)
+    msg.channel.send(embed)
     return
   }
 
+  const text = msg.content.replace(/<@!?(\d+)>/g, '')
   const date = dateConvert(text)
-  school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
-  embed.setTitle(`${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${define.week[date.getDay()]})\n`)
-  return await mealConvert(date, text.match(/(아침|조식)/) ? '조식' : text.match(/(점심|중식)/) ? '중식' : text.match(/(저녁|석식)/) ? '석식' : '급식', embed, school)
+  const getDay = date.getDay()
+  const getDate = date.getDate()
+  const getMonth = date.getMonth() + 1
+  const getFullYear = date.getFullYear()
+  const M = getMonth > 10 ? getMonth : '0' + getMonth
+  const D = getDate > 10 ? getDate : '0' + getDate
+
+  school.meal(Object.assign({
+    MLSV_YMD: String(getFullYear) + M + D
+  }, data))
+    .then(res => {
+      embed.setTitle(`${getFullYear}년 ${getMonth}월 ${getDate}일 ${define.week[getDay]}요일`)
+
+      const type = text.match(/아침|조식/) ? '조식' : text.match(/점심|중식/) ? '중식' : text.match(/저녁|석식/) ? '석식' : null
+
+      res.forEach(e => {
+        if (!type)
+          embed.addField(e.MMEAL_SC_NM, e.DDISH_NM.replace(/\<br\/\>/gi, '\n').replace(/\*|[\d.]/gi, ''))
+        else if (e.MMEAL_SC_NM == type) {
+          embed.addField(e.MMEAL_SC_NM, e.DDISH_NM.replace(/\<br\/\>/gi, '\n').replace(/\*|[\d.]/gi, ''))
+          embed.addField(e.CAL_INFO, e.NTR_INFO.replace(/\<br\/\>/gi, '\n'))
+        }
+      })
+
+      if (!embed.fields.length) embed.setDescription(`${type ? type + ' ' : ''}정보가 없습니다.`)
+
+      msg.channel.send(embed)
+    })
 }
 
 export default meal

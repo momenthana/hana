@@ -1,12 +1,19 @@
 import Discord from 'discord.js'
 import colors from 'colors'
 import fs from 'fs'
-import Koa from 'koa'
-import Router from 'koa-router'
-import bodyParser from 'koa-bodyparser'
-import axios from 'axios'
-import school from './school'
+import { help, invite, meal, ping, remove, schedule, search, uptime } from './commands'
 import { embed } from './utils'
+
+const commands = {
+  'help|도움|도와줘|명령': help,
+  'invite|초대링크|초대주소': invite,
+  'meal|아침|조식|점심|중식|저녁|석식|급식|식단|학식': meal,
+  'ping|핑': ping,
+  'remove|삭제|제거': remove,
+  'schedule|일정': schedule,
+  'search|검색': search,
+  'uptime|업타임': uptime,
+}
 
 const messages = JSON.parse(fs.readFileSync('src/messages.json').toString())
 
@@ -29,8 +36,11 @@ if (process.env.discordToken) {
 
       if (!(msg.content.includes(discord.user.username)) != (msg.mentions.users.first() ? discord.user.id == msg.mentions.users.first().id : false)) return
 
-      const result = await school('discord', msg.channel.id, msg.content.replace(/<@!?(\d+)>/g, ''), embed(msg), discord, msg)
-      if (result && (result.description || result.fields.length)) await msg.channel.send(result)
+      for (const [regexp, command] of Object.entries(commands)) {
+        if (msg.content.match(RegExp(regexp, 'i'))) {
+          await command({msg, discord, embed: embed(msg)})
+        }
+      }
     } catch (error) {
       console.warn(error)
     }
@@ -44,61 +54,4 @@ if (process.env.discordToken) {
   }, 10000)
 
   discord.login(process.env.discordToken)
-}
-
-if (process.env.messengerToken) {
-  const koa = new Koa()
-  const router = new Router()
-
-  router.get('/messenger', ctx => {
-    let mode = ctx.request.query['hub.mode']
-    let token = ctx.request.query['hub.verify_token']
-    let challenge = ctx.request.query['hub.challenge']
-
-    if (mode && token) {
-      if (mode === 'subscribe' && token === process.env.messengerToken) {
-        console.log('WEBHOOK_VERIFIED')
-        ctx.body = challenge
-      } else {
-        ctx.response.status = 403
-      }
-    }
-  })
-
-  router.post('/messenger', ctx => {
-    let body = ctx.request.body
-
-    if (body.object === 'page') {
-      body.entry.forEach(async entry => {
-        let webhook_event = entry.messaging[0]
-
-        const result = await school('messenger', webhook_event.sender.id, webhook_event.message.text, new Discord.MessageEmbed(), null, null)
-        if (result && (result.description || result.fields.length)) {
-          let fields = ''
-          if (result.fields.length) {
-            result.fields.forEach(element => {
-              fields += element.name + element.value + '\n'
-            })
-          }
-          axios.post('https://graph.facebook.com/v7.0/me/messages?access_token=' + process.env.messengerToken, {
-            messaging_type: "RESPONSE",
-            recipient: {
-              id: webhook_event.sender.id
-            },
-            message: {
-              text: (result.title ? result.title + '\n' : '') + (result.description ? result.description + '\n' : '') + fields
-            }
-          })
-        }
-      })
-
-      ctx.body = 'EVENT_RECEIVED'
-    } else {
-      ctx.response.status = 404
-    }
-  })
-
-  koa.use(bodyParser()).use(router.routes()).use(router.allowedMethods())
-
-  koa.listen(3000)
 }

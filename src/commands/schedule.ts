@@ -1,29 +1,45 @@
-import School from 'school-kr'
-import { load } from '../utils'
+const school = require('school-info')
+import { dateConvert, load } from '../utils'
 
 const messages = load('src/messages.json')
 
-const schedule = async (text: string, embed, channel: string, type: string, school) => {
-  const data = load(`data/${type}.json`)[channel]
+const schedule = async ({msg, embed}) => {
+  const data = load('data/school.json')[msg.channel.id]
+
   if (!data) {
     embed.setDescription(messages.unregistered)
+    msg.channel.send(embed)
     return
   }
 
-  school.init(School.Type[data.type], School.Region[data.region], data.schoolCode)
-  const calendar = await school.getCalendar({ default: null })
-  embed.setTitle(`${calendar.year}년 ${calendar.month}월\n`)
+  const text = msg.content.replace(/<@!?(\d+)>/g, '')
+  const date = dateConvert(text)
+  const getMonth = date.getMonth() + 1
+  const getFullYear = date.getFullYear()
+  const M = getMonth + 1 > 10 ? getMonth : '0' + getMonth
 
-  calendar.year = undefined
-  calendar.month = undefined
-  calendar.day = undefined
-  calendar.today = undefined
+  date.setMonth(getMonth)
+  date.setDate(0)
 
-  for (const day in calendar) {
-    if (calendar[day]) {
-      embed.addField(day + '일', calendar[day].replace(/,/g, '\n'))
-    }
-  }
+  school.schedule(Object.assign({
+    KEY: process.env.neisToken,
+    AA_FROM_YMD: String(getFullYear) + M + '01',
+    AA_TO_YMD: String(getFullYear) + M + date.getDate(),
+  }, data))
+    .then(res => {
+      embed.setTitle(`${getFullYear}년 ${getMonth}월 학사일정`)
+      let prependDate = null
+      res.forEach(e => {
+        const currentDate = Number(e.AA_YMD) % 100
+        if (currentDate == prependDate) {
+          embed.fields[embed.fields.length - 1].value += `\n${e.EVENT_NM}`
+        } else {
+          embed.addField(`${currentDate}일 ${e.SBTR_DD_SC_NM}`, e.EVENT_NM)
+          prependDate = currentDate
+        }
+      })
+      msg.channel.send(embed)
+    })
 }
 
 export default schedule

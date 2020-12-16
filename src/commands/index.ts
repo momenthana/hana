@@ -5,7 +5,6 @@ import remove from './remove'
 import meal from './meal'
 import schedule from './schedule'
 import search from './search'
-import set from './set'
 import uptime from './uptime'
 
 export {
@@ -16,6 +15,5 @@ export {
   meal,
   schedule,
   search,
-  set,
   uptime
 }

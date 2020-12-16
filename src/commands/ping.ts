@@ -1,4 +1,4 @@
-const ping = async (text, embed, channel, type, school, searches, discord, msg) => {
+const ping = async ({msg, discord, embed}) => {
   if (discord) {
     embed.setTitle(msg.content.includes('핑') ? '퐁!' : 'Pong!')
       .addField('Discord Server', '측정중...')
