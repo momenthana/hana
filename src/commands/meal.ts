@@ -32,7 +32,7 @@ const meal = async ({ msg, embed }) => {
 
       res.forEach(e => {
         if (!type)
-          embed.addField(e.MMEAL_SC_NM, e.DDISH_NM.replace(/\<br\/\>/gi, '\n').replace(/\*|[\d.]/gi, ''))
+          embed.addField(e.MMEAL_SC_NM, e.DDISH_NM.replace(/\<br\/\>/gi, '\n').replace(/\*|[\d.]/gi, ''), true)
         else if (e.MMEAL_SC_NM == type) {
           embed.addField(e.MMEAL_SC_NM, e.DDISH_NM.replace(/\<br\/\>/gi, '\n').replace(/\*|[\d.]/gi, ''))
           embed.addField(e.CAL_INFO, e.NTR_INFO.replace(/\<br\/\>/gi, '\n'))
