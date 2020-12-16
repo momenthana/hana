@@ -40,6 +40,11 @@ const schedule = async ({msg, embed}) => {
       })
       msg.channel.send(embed)
     })
+    .catch(() => {
+      embed.setDescription('일정 정보가 없습니다.')
+
+      msg.channel.send(embed)
+    })
 }
 
 export default schedule
