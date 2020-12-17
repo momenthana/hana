@@ -16,7 +16,13 @@ const search = async ({ msg }) => {
 
   school.search({
     SCHUL_NM: name[name.length - 1]
-  }).then(async res => {
+  })
+  .then(async res => {
+    if (!res[0]) {
+      embedA.setDescription('학교나 유치원 이름을 정확하게 입력해줘!')
+      return msg.channel.send(embedA)
+    }
+
     res.forEach((e, i) => {
       embedA.addField(`${i + 1}. ${e.SCHUL_NM}`, e.ORG_RDNMA)
     });
@@ -53,6 +59,12 @@ const search = async ({ msg }) => {
         embedB.setDescription('등록이 취소됬어!')
         reply.channel.send(embedB);
       });
+  })
+  .catch(err => {
+    embedB.setTitle('Error')
+    embedB.setDescription(err)
+    embedB.addField('에러가 지속되면 아래 디스코드 서버에서 알려줘!', 'https://discord.gg/RxRSgav')
+    msg.channel.send(embedB)
   })
 }
 

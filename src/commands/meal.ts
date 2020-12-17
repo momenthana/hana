@@ -30,6 +30,12 @@ const meal = async ({ msg, embed }) => {
     MLSV_YMD: String(getFullYear) + M + D
   }, data))
     .then(res => {
+      if (!res[0]) {
+        embed.setDescription(`${type ? type + ' ' : ''}정보가 없어!`)
+        msg.channel.send(embed)
+        return
+      }
+
       res.forEach(e => {
         if (!type)
           embed.addField(e.MMEAL_SC_NM, e.DDISH_NM.replace(/\<br\/\>/gi, '\n').replace(/\*|[\d.]/gi, ''), true)
@@ -39,13 +45,13 @@ const meal = async ({ msg, embed }) => {
         }
       })
 
-      if (!embed.fields.length) embed.setDescription(`${type ? type + ' ' : ''}정보가 없습니다.`)
-
+      if (!embed.fields.length) embed.setDescription(`${type ? type + ' ' : ''}정보가 없어!`)
       msg.channel.send(embed)
     })
-    .catch(() => {
-      embed.setDescription(`${type ? type + ' ' : ''}정보가 없습니다.`)
-
+    .catch(err => {
+      embed.setTitle('Error')
+      embed.setDescription(err)
+      embed.addField('에러가 지속되면 아래 디스코드 서버에서 알려줘!', 'https://discord.gg/RxRSgav')
       msg.channel.send(embed)
     })
 }

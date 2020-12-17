@@ -27,6 +27,11 @@ const schedule = async ({msg, embed}) => {
     AA_TO_YMD: String(getFullYear) + M + date.getDate(),
   }, data))
     .then(res => {
+      if (!res[0]) {
+        embed.setDescription('일정 정보가 없어!')
+        return msg.channel.send(embed)
+      }
+
       embed.setTitle(`${getFullYear}년 ${getMonth}월 학사일정`)
       let prependDate = null
       res.forEach(e => {
@@ -40,9 +45,10 @@ const schedule = async ({msg, embed}) => {
       })
       msg.channel.send(embed)
     })
-    .catch(() => {
-      embed.setDescription('일정 정보가 없습니다.')
-
+    .catch(err => {
+      embed.setTitle('Error')
+      embed.setDescription(err)
+      embed.addField('에러가 지속되면 아래 디스코드 서버에서 알려줘!', 'https://discord.gg/RxRSgav')
       msg.channel.send(embed)
     })
 }
