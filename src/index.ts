@@ -11,7 +11,7 @@ const commands = {
   'ping|핑': ping,
   'remove|삭제|제거': remove,
   'schedule|일정': schedule,
-  'search|검색': search,
+  'search|검색|등록': search,
   'uptime|업타임': uptime,
 }
 
