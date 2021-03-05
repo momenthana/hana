@@ -34,6 +34,8 @@ if (process.env.discordToken) {
         return
       }
 
+      if (process.env.test) console.log(colors.green(msg.channel.id), colors.yellow(msg.author.username), msg.content)
+
       if (!(msg.content.includes(discord.user.username)) != (msg.mentions.users.first() ? discord.user.id == msg.mentions.users.first().id : false)) return
 
       for (const [regexp, command] of Object.entries(commands)) {
