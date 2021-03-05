@@ -1,4 +1,5 @@
 const school = require('school-info')
+import base62 from 'base62'
 import { dateConvert, load } from '../utils'
 
 const messages = load('src/messages.json')
@@ -23,6 +24,7 @@ const meal = async ({ msg, embed }) => {
   const D = getDate > 10 ? getDate : '0' + getDate
 
   embed.setTitle(`${getFullYear}년 ${getMonth}월 ${getDate}일 ${define.week[getDay]}요일`)
+  embed.setAuthor('Web 바로가기', 'https://user-images.githubusercontent.com/59823089/110070696-dcb3e480-7dbd-11eb-9ee3-7d6f040f3e25.png', `https://sc.hana.icu/${data.ATPT_OFCDC_SC_CODE[0] + base62.encode(data.SD_SCHUL_CODE)}/meal`)
 
   const type = text.match(/아침|조식/) ? '조식' : text.match(/점심|중식/) ? '중식' : text.match(/저녁|석식/) ? '석식' : null
 
