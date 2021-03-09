@@ -28,7 +28,6 @@ const meal = async ({ msg, embed }) => {
 
   const type = text.match(/아침|조식/) ? '조식' : text.match(/점심|중식/) ? '중식' : text.match(/저녁|석식/) ? '석식' : null
 
-  console.log(String(getFullYear) + M + D)
   school.meal(Object.assign({
     MLSV_YMD: String(getFullYear) + M + D
   }, data))
