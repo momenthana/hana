@@ -16,7 +16,7 @@ const schedule = async ({msg, embed}) => {
   const date = dateConvert(text)
   const getMonth = date.getMonth() + 1
   const getFullYear = date.getFullYear()
-  const M = getMonth + 1 > 10 ? getMonth : '0' + getMonth
+  const M = getMonth > 9 ? getMonth : '0' + getMonth
 
   date.setMonth(getMonth)
   date.setDate(0)
