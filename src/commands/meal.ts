@@ -47,7 +47,7 @@ export class Meal {
     embed.setAuthor(
       "Web 바로가기",
       "https://user-images.githubusercontent.com/59823089/110070696-dcb3e480-7dbd-11eb-9ee3-7d6f040f3e25.png",
-      `https://sc.hana.icu/${
+      `https://school.hana.icu/${
         data.ATPT_OFCDC_SC_CODE[0] + base62.encode(data.SD_SCHUL_CODE)
       }/meal`
     )
