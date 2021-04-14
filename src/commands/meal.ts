@@ -100,8 +100,8 @@ export class Meal {
         embed.setTitle("Error")
         embed.setDescription(err)
         embed.addField(
-          "에러가 지속되면 아래 디스코드 서버에서 알려줘!",
-          "https://discord.gg/RxRSgav"
+          "에러가 지속되면 개발자 DM으로 알려줘!",
+          "https://instagram.com/moment._.hana/"
         )
         msg.channel.send(embed)
       })

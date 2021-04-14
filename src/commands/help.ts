@@ -32,6 +32,10 @@ export class Help {
         `@${discord.user.username} 삭제`,
         "채널에 등록된 학교를 삭제할 수 있어"
       )
+      .addField(
+        "이외 문의하거나 요청사항은 개발자 DM으로 알려줘!",
+        "https://instagram.com/moment._.hana/"
+      )
     msg.channel.send(embed)
   }
 }
