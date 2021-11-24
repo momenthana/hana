@@ -1,11 +1,11 @@
-const school = require("school-info")
-import { load, save, embed } from "../utils"
+const school = require("school.hana.js")
+import { embed } from "@/utils"
 
 export class Search {
   name: string
   description: string
   msg: any
-  constructor({ msg }) {
+  constructor({ msg }: any) {
     this.name = "Ping"
     this.description = ""
     this.msg = msg
@@ -67,12 +67,12 @@ export class Search {
                 console.log(
                   `Add ${res[i].SCHUL_NM} from channel ${msg.channel.id}`
                 )
-                const data = load("data/school.json")
+                const data = {}
                 data[msg.channel.id] = {
                   ATPT_OFCDC_SC_CODE: res[i].ATPT_OFCDC_SC_CODE,
                   SD_SCHUL_CODE: res[i].SD_SCHUL_CODE,
                 }
-                save("data/school.json", data)
+
                 reply.edit(embedB)
               }
             })

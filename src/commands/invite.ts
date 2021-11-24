@@ -3,7 +3,7 @@ export class Invite {
   description: string
   msg: any
   embed: any
-  constructor({ msg, embed }) {
+  constructor({ msg, embed }: any) {
     this.name = "Ping"
     this.description = ""
     this.msg = msg

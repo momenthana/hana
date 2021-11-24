@@ -4,7 +4,7 @@ export class Help {
   msg: any
   client: any
   embed: any
-  constructor({ msg, discord, embed }) {
+  constructor({ msg, discord, embed }: any) {
     this.name = "Ping"
     this.description = ""
     this.msg = msg

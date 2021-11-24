@@ -1,9 +1,6 @@
-const school = require("school-info")
+const school = require("school.hana.js")
 import base62 from "base62"
-import { dateConvert, load } from "../utils"
-
-const messages = load("src/messages.json")
-const define = load("src/define.json")
+import { dateConvert } from "../utils"
 
 export class Meal {
   name: string
@@ -24,10 +21,10 @@ export class Meal {
     const discord = this.client
     const embed = this.embed
 
-    const data = load("data/school.json")[msg.channel.id]
+    const data = {}[msg.channel.id]
 
     if (!data) {
-      embed.setDescription(messages.unregistered)
+      embed.setDescription("messages.unregistered")
       msg.channel.send(embed)
       return
     }
@@ -42,7 +39,7 @@ export class Meal {
     const D = getDate > 9 ? getDate : "0" + getDate
 
     embed.setTitle(
-      `${getFullYear}년 ${getMonth}월 ${getDate}일 ${define.week[getDay]}요일`
+      `${getFullYear}년 ${getMonth}월 ${getDate}일 ${'define.week[getDay]'}요일`
     )
     embed.setAuthor(
       "Web 바로가기",

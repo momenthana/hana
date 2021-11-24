@@ -1,13 +1,9 @@
-import { load, save } from "../utils"
-
-const messages = load("src/messages.json")
-
 export class Remove {
   name: string
   description: string
   msg: any
   embed: any
-  constructor({ msg, embed }) {
+  constructor({ msg, embed }: any) {
     this.name = "Remove"
     this.description = ""
     this.msg = msg
@@ -18,14 +14,14 @@ export class Remove {
     const msg = this.msg
     const embed = this.embed
 
-    const data = load("data/school.json")
+    const data = {}
     if (!data[msg.channel.id]) {
-      embed.setDescription(messages.unregistered)
+      embed.setDescription("messages.unregistered")
       msg.channel.send(embed)
     }
 
     delete data[msg.channel.id]
-    save(`data/school.json`, data)
+
     embed.setDescription(`채널에 등록된 정보를 삭제했어!`)
     msg.channel.send(embed)
   }

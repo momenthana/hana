@@ -1,7 +1,5 @@
-const school = require("school-info")
-import { dateConvert, load } from "../utils"
-
-const messages = load("src/messages.json")
+const school = require("school.hana.js")
+import { dateConvert } from "../utils"
 
 export class Schedule {
   name: string
@@ -22,10 +20,10 @@ export class Schedule {
     const discord = this.client
     const embed = this.embed
 
-    const data = load("data/school.json")[msg.channel.id]
+    const data = {}[msg.channel.id]
 
     if (!data) {
-      embed.setDescription(messages.unregistered)
+      embed.setDescription("messages.unregistered")
       msg.channel.send(embed)
       return
     }

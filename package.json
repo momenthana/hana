@@ -1,9 +1,9 @@
 {
   "name": "hana",
-  "version": "1.0.8",
+  "version": "0.0.1",
   "scripts": {
-    "start": "ts-node -r dotenv/config src/index",
-    "dev": "ts-node-dev -r dotenv/config src/index dotenv_config_path=.env.dev",
+    "start": "ts-node -r tsconfig-paths/register -r dotenv/config src/index",
+    "dev": "ts-node-dev -r tsconfig-paths/register -r dotenv/config src/index dotenv_config_path=.env.dev",
     "lint": "eslint src/*.js --fix"
   },
   "main": "src/index.ts",
@@ -11,35 +11,19 @@
   "author": "Hana <momenthana@kakao.com>",
   "license": "MIT",
   "dependencies": {
+    "@discordjs/rest": "^0.1.0-canary.0",
     "@types/node": "^14.0.26",
     "base62": "^2.0.1",
-    "colors": "^1.4.0",
-    "discord.js": "^12.2.0",
+    "discord.js": "^13.3.1",
     "dotenv": "^8.2.0",
-    "school-info": "^1.0.0",
-    "school-kr": "^3.1.1",
+    "school.hana.js": "^0.0.1",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.6"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.20.0",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
     "nodemon": "^2.0.2",
-    "ts-node-dev": "^1.0.0-pre.51"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "standard"
-    ],
-    "rules": {},
-    "parserOptions": {}
+    "ts-node-dev": "^1.0.0-pre.51",
+    "tsconfig-paths": "^3.12.0"
   }
 }
