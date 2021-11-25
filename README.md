@@ -4,7 +4,6 @@
 [![license](https://img.shields.io/github/license/momenthana/hana?style=flat-square)](https://github.com/momenthana/hana/blob/develop/LICENSE)
 [![chat](https://img.shields.io/discord/716501342436196384?style=flat-square)](https://discord.gg/RxRSgav)
 [![discord](https://img.shields.io/badge/bot-Discord-blue?style=flat-square)](https://discord.com/api/oauth2/authorize?client_id=711769311387058238&permissions=0&scope=bot)
-[![messenger](https://img.shields.io/badge/bot-Messenger-blueviolet?style=flat-square)](https://m.me/messengerhana)
 
 <img src="https://user-images.githubusercontent.com/59823089/87887546-2df6aa00-ca61-11ea-9421-cc40c2e12fb7.png" width="50%">
 <img src="https://user-images.githubusercontent.com/59823089/87887547-2f27d700-ca61-11ea-90c2-4f433760c696.png" width="30%">

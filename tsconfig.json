@@ -2,6 +2,9 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "noImplicitAny": false,
+    "skipLibCheck": true,         
+    "experimentalDecorators": true, 
+    "emitDecoratorMetadata": true,
     "strict": false,
     "baseUrl": ".",
     "paths": {

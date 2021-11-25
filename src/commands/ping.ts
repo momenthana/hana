@@ -1,14 +1,11 @@
-import { Command } from "@/Command"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
-export class Ping extends Command {
-  constructor() {
-    super({
-      name: "ping",
-      description: "Replies with Pong!",
-    })
-  }
+export const data = new SlashCommandBuilder()
+  .setName("ping")
+  .setDescription("Replies with Pong!")
 
-  public async discord(interaction): Promise<void> {
-    await interaction.reply("Pong!")
-  }
+export const init = async () => {}
+
+export const execute = async (interaction) => {
+  return interaction.reply("Pong!")
 }

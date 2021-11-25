@@ -1,28 +1,43 @@
-import { Client, Intents } from "discord.js"
-
-import { Ping } from "@/commands"
-import { init } from "@/Command"
-
-const commands = {
-  ping: new Ping(),
-}
+import fs from "fs"
+import { Client, Collection, Intents } from "discord.js"
 
 if (process.env.DISCORD_TOKEN) {
-  init()
+  const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 
-  const discord = new Client({ intents: [Intents.FLAGS.GUILDS] })
+  const commands = new Collection()
+  const commandFiles = fs
+    .readdirSync(__dirname + "/commands")
+    .filter((file) => file.endsWith(".ts"))
 
-  discord.on("ready", () => {
-    console.log(`Logged in as ${discord.user.tag}!`)
+  for (const file of commandFiles) {
+    const command = require(`./commands/${file}`)
+    command.init(client)
+    commands.set(command.data.name, command)
+  }
+
+  client.on("ready", () => {
+    console.log(`Logged in as ${client.user.tag}!`)
   })
 
-  discord.on("interactionCreate", async (interaction: any) => {
+  client.on("interactionCreate", async (interaction: any) => {
     if (!interaction.isCommand()) return
 
-    if (commands[interaction.commandName]) {
-      await commands[interaction.commandName].discord(interaction)
+    const command = commands.get(interaction.commandName)
+
+    if (!command) return
+
+    try {
+      // @ts-expect-error
+      await command.execute(interaction)
+    } catch (err) {
+      console.error(err)
+
+      await interaction.reply({
+        content: "There was an error while executing this command!",
+        ephemeral: true,
+      })
     }
   })
 
-  discord.login(process.env.DISCORD_TOKEN)
+  client.login(process.env.DISCORD_TOKEN)
 }

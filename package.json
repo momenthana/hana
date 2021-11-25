@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register -r dotenv/config src/index",
-    "dev": "ts-node-dev -r tsconfig-paths/register -r dotenv/config src/index dotenv_config_path=.env.dev",
+    "dev": "ts-node -r tsconfig-paths/register -r dotenv/config src/index dotenv_config_path=.env.dev",
     "lint": "eslint src/*.js --fix"
   },
   "main": "src/index.ts",
@@ -11,6 +11,7 @@
   "author": "Hana <momenthana@kakao.com>",
   "license": "MIT",
   "dependencies": {
+    "@discordjs/builders": "^0.8.2",
     "@discordjs/rest": "^0.1.0-canary.0",
     "@types/node": "^14.0.26",
     "base62": "^2.0.1",

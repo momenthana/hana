@@ -1,29 +1,18 @@
+import fs from "fs"
 import { env } from "process"
 import { REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v9"
 
-import { CommandOptions } from "@/types"
-
-export abstract class Command {
-  public conf: CommandOptions
-
-  constructor(protected options: CommandOptions) {
-    this.conf = {
-      name: options.name,
-      description: options.description || "No information specified.",
-    }
-  }
-
-  public abstract discord(interaction: any): Promise<void>
-}
+const commands = []
+const commandFiles = fs
+  .readdirSync(__dirname + "/commands")
+  .filter((file) => file.endsWith(".ts"))
 
 export const init = async () => {
-  const commands = [
-    {
-      name: "ping",
-      description: "pong",
-    },
-  ]
+  for (const file of commandFiles) {
+    const command = require(`./commands/${file}`)
+    commands.push(command.data.toJSON())
+  }
 
   const rest = new REST({ version: "9" }).setToken(env.DISCORD_TOKEN)
 
