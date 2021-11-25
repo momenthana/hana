@@ -2,10 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "noImplicitAny": false,
-    "skipLibCheck": true,         
-    "experimentalDecorators": true, 
-    "emitDecoratorMetadata": true,
-    "moduleResolution": "node",
+    "skipLibCheck": true,
     "strict": false,
     "baseUrl": ".",
     "paths": {

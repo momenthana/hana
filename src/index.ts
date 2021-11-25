@@ -1,6 +1,6 @@
 import { ShardingManager } from "discord.js"
 
-import { init } from "@/command"
+import { init } from "./command"
 
 init()
 
