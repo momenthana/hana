@@ -37,15 +37,17 @@ if (env.DISCORD_TOKEN) {
   client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`)
 
-    client.user.setActivity('/school')
+    client.user.setActivity("/school")
   })
 
   client.on("messageCreate", async (message: any) => {
     if (message.author.bot) return
 
     if (
-      message.content.match(MessageMentions.USERS_PATTERN)[0] ===
-      `<@!${client.user.id}>`
+      message.content.match(MessageMentions.USERS_PATTERN) &&
+      message.content
+        .match(MessageMentions.USERS_PATTERN)
+        .includes(`<@!${client.user.id}>`)
     ) {
       message.reply({
         content:
