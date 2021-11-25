@@ -1,7 +1,13 @@
 import fs from "fs"
+import mongoose from "mongoose"
+import { env } from "process"
 import { Client, Collection, Intents } from "discord.js"
 
-if (process.env.DISCORD_TOKEN) {
+mongoose.connect(
+  `mongodb+srv://${env.MONGO_DB_USER}:${env.MONGO_DB_PASS}@${env.MONGO_DB_HOST}/bot`
+)
+
+if (env.DISCORD_TOKEN) {
   const client = new Client({ intents: [Intents.FLAGS.GUILDS] })
 
   const commands = new Collection()
@@ -39,5 +45,5 @@ if (process.env.DISCORD_TOKEN) {
     }
   })
 
-  client.login(process.env.DISCORD_TOKEN)
+  client.login(env.DISCORD_TOKEN)
 }

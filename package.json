@@ -17,6 +17,7 @@
     "base62": "^2.0.1",
     "discord.js": "^13.3.1",
     "dotenv": "^8.2.0",
+    "mongoose": "^6.0.13",
     "school.hana.js": "^0.0.1",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.6"

@@ -2,6 +2,8 @@ const school = require("school.hana.js")
 import { MessageActionRow, MessageSelectMenu } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
+import School from "@/models/school"
+
 export const data = new SlashCommandBuilder()
   .setName("school")
   .setDescription("학교 검색하기")
@@ -16,7 +18,11 @@ export const init = async (client) => {
     if (interaction.customId === "school") {
       await interaction.deferUpdate()
 
-      console.log(interaction.values, interaction.user.id)
+      await School.findOneAndUpdate(
+        { id: interaction.user.id },
+        { school: interaction.values[0] },
+        { upsert: true }
+      )
 
       await interaction.editReply({
         content: "기억했어! 이제 다른 명령어를 사용해봐",
