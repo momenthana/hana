@@ -5,6 +5,7 @@
     "skipLibCheck": true,         
     "experimentalDecorators": true, 
     "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
     "strict": false,
     "baseUrl": ".",
     "paths": {
