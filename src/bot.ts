@@ -56,7 +56,7 @@ if (env.DISCORD_TOKEN) {
           new MessageActionRow().addComponents(
             new MessageButton()
               .setURL(
-                "https://discord.com/api/oauth2/authorize?client_id=711769311387058238&permissions=8&scope=bot"
+                "https://discord.com/oauth2/authorize?client_id=711769311387058238&permissions=8&scope=bot%20applications.commands"
               )
               .setStyle("LINK")
               .setLabel("다시 초대하기")
